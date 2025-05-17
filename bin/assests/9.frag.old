@@ -1,0 +1,92 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+const float PI = 3.14159265358979323846264;
+const float PI_x_2 = 2.0 * PI;
+
+float InnerCircle = 0.75;
+const float OuterCircle = 1.0;
+const float AntiAliasingEdge = 0.01;
+const float transparance = 0.7;
+
+uniform float time;
+uniform vec2 resolution;
+
+//------------------- Fonction ---------------------------------------
+float cubeDist(vec3 p){
+  return max(abs(p.x),max(abs(p.y),abs(p.z)));
+}
+
+mat3 genRotMat(float a0,float x,float y,float z){
+  float a=a0*3.1415926535897932384626433832795/180.0;
+  float c=1.0-cos(a);
+  float s=sin(a);
+  return mat3(
+    1.0+c*(x*x-1.0),
+    -z*s+c*x*y,
+    y*s+c*x*z,
+    z*s+c*x*y,
+    1.0+c*(y*y-1.0),
+    -x*s+c*y*z,
+    -y*s+c*x*z,
+    x*s+c*y*z,
+    1.0+c*(z*z-1.0)
+  );
+}
+//-----------------------------------------------------------------
+void main( void ) {
+
+
+	vec2 coord = ( gl_FragCoord.xy / min(resolution.x, resolution.y) - vec2(0.5)) * 2.0;
+	// Caméra: test
+	
+          float val;
+	  float spread=1.0;
+          float cameraZ=-3.5;
+          float nearZ=-1.0;
+          vec3 ray=vec3(0.0,0.0,0.0);
+          ray.xy+=coord.st*spread*(nearZ-cameraZ);
+          ray.z = nearZ;
+          mat3 rot=genRotMat(sin(time/46.13)*360.0,1.0,0.0,0.0);
+          vec3 temp;
+          temp=ray.xyz*rot;
+          // effect pluie
+          float displacement=sin(10.0*temp.x+time*1.142)*sin(10.0*temp.y+time*1.452)*sin(10.0*temp.z+time*0.842);
+          val=cubeDist(temp)+displacement/5.0*sin(time/40.0);
+          
+              //if(displacement<0.75){
+               InnerCircle = displacement;
+               /*
+               }else{
+               InnerCircle = 0.75;
+               }      */
+
+
+        //--------------------------
+	vec4 color = vec4(0.12, 0.9, 0.25, transparance);
+
+	float r = distance(coord, vec2(0.0));
+    	float t = atan(coord.y, coord.x);
+    	
+        // Cercle intérrieur, cercle extérieur
+    	bool hit = InnerCircle <= r && r <= OuterCircle;
+    	float clockAngle = PI / 2.0 - t;
+	
+    	if (clockAngle < 0.0) {
+       		clockAngle = clockAngle + PI * 2.0;
+    	}
+    
+	float phase = PI_x_2 * fract(time * -0.3);
+    	if (!hit || clockAngle > phase) {
+        	discard;
+    	}
+	
+
+	float blend = smoothstep(InnerCircle, InnerCircle+ AntiAliasingEdge, r);
+	blend *=  (1.0 - smoothstep(OuterCircle - AntiAliasingEdge, OuterCircle, r));
+
+
+
+	gl_FragColor = color * blend;
+}

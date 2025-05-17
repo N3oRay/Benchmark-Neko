@@ -1,0 +1,67 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform float time;
+uniform vec2 resolution;
+uniform vec2 mouse;
+uniform sampler2D backbuffer;
+	
+vec4 maru(vec2 pos,vec2 me)
+{
+	float size = 10.0;
+	float r = 1.0 - (sin(time*1.0) / 4.0);
+	float g = 0.2 + (cos(time*1.0) / 4.0);
+	float b = 1.0 - (cos(time*3.0) / 2.0);
+	float dist = length(pos - me);
+	float intensity = pow(size/dist, 3.0);
+	vec4 color = vec4(r, g, b, 1.0);
+	return color*intensity;
+}
+
+
+
+vec2 castRay( in vec3 ro, in vec3 rd, in float maxd )
+{
+	float precis = 0.001;
+    float h=precis*2.0;
+    float t = 0.0;
+    float m = -1.0;
+    for( int i=0; i<60; i++ )
+    {
+        if( abs(h)<precis||t>maxd ) continue;//break;
+        t += h;
+	    vec2 res = map( ro+rd*t );
+        h = res.x;
+	    m = res.y;
+    }
+
+    if( t>maxd ) m=-1.0;
+    return vec2( t, m );
+}
+
+void main( void )
+{
+	vec2 texPos = vec2(gl_FragCoord.xy/resolution);
+	vec4 zenkai = texture2D(backbuffer, texPos)*0.95;
+	//float mousex = mouse.x;
+        //float mousey = mouse.y;
+        
+        // camera
+        
+        for( int aoi=0; aoi<5; aoi++ )
+        {
+
+
+
+      	vec3 ro = vec3( -2.5+3.2*cos(0.1*time + 6.0*mo.x), 1.0 + 2.0*mo.y, 0.5 + 3.2*sin(0.1*time + 6.0*mo.x) );
+      	vec3 ta = vec3( -0.5, -0.4, 0.5 );
+      	vec3 rd = normalize( p.x*cu + p.y*cv + 2.5*cw );
+              vec2 res = castRay(ro,rd,20.0);
+              float t = res.x;
+              float mousex = t*float(aoi;
+              float mousey = ro.x*float(aoi;
+      
+      	gl_FragColor = zenkai+maru(vec2(mousex*resolution.x,mousey*resolution.y),gl_FragCoord.xy);
+	}
+}
