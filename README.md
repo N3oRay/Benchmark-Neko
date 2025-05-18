@@ -16,4 +16,7 @@
   <img src="./prevu3.png" style="flex-grow: 1; flex-shrink: 1;" />
 </div>
 
+## Info
 These shaders are taken from http://glsl.heroku.com
+
+More source of any "effect" on glsl.heroku.com.
