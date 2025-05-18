@@ -1,5 +1,5 @@
 ## Prevu
-index.php
+
 <div style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0 0 2em 0;">
   <img src="./prevu0.png" style="flex-grow: 1; flex-shrink: 1;" />
 </div>
