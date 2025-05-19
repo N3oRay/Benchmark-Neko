@@ -16,6 +16,12 @@ Benchmak-Neko is a flexible console-base OpenGL Sandbox to display 2D/3D GLSL sh
   <img src="./prevu3.png" style="flex-grow: 1; flex-shrink: 1;" />
 </div>
 
+## Clone repository and submodules
+
+git clone https://https://github.com/N3oRay/Benchmark-Neko.git
+cd Benchmark-Neko
+
+
 ## Info
 These shaders are taken from http://glsl.heroku.com
 
