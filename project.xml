@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Benchmark N3oray" package="org.openfl.benchmarkN3R" version="1.0.0" company="n3r" />
+	<app file="BenchmarkN3R" main="ApplicationMain" path="Export" />
+	
+	<source path="haxe" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="box2d" />
+	
+	<assets path="bin/assets" rename="assets" />
+	
+</project>
