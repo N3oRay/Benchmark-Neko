@@ -34,7 +34,7 @@ sudo haxelib install openfl
 
 sudo haxelib run openfl setup
 
-## Run compilte
+## Run compile
 
 sudo openfl build neko
 
