@@ -34,11 +34,19 @@ sudo haxelib install openfl
 
 sudo haxelib run openfl setup
 
-## Run compile Windows
+## Build&RUN neko
 
 sudo openfl build neko
 
-## Run compile Linux
+## Build&RUN in HTML5
+
+sudo openfl build html5
+
+## Build&RUN in HTML5
+
+sudo openfl build linux
+
+## Run compile with lime
 
 To compile a Neko application, run lime build neko.
 
