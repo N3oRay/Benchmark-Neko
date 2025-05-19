@@ -44,6 +44,8 @@ To compile a Neko application, run lime build neko.
 
 To compile and launch a Neko application with one command, run lime test neko
 
+To compile a Linux executable, run lime build linux. Add the -debug option to create a build that can connect to the HXCPP debugger.
+
 To compile and launch a Linux executable with one command, run lime test linux.
 
 
