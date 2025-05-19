@@ -25,11 +25,12 @@ or
 
 https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
-## Compile
+## Compile on linux
 
 sudo haxelib setup
 
 sudo haxelib install openfl
+sudo haxelib run openfl setup
 
 
 ## Clone repository and submodules
