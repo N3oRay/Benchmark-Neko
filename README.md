@@ -25,6 +25,13 @@ or
 
 https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
+## Compile
+
+sudo haxelib setup
+
+sudo haxelib install openfl
+
+
 ## Clone repository and submodules
 
 git clone https://github.com/N3oRay/Benchmark-Neko.git
