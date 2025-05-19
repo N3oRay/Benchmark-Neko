@@ -24,6 +24,7 @@ cd Benchmark-Neko
 
 
 ## Info
+Haxe : https://haxe.org/
 These shaders are taken from http://glsl.heroku.com
 
 More source of any "effect" on glsl.heroku.com.
