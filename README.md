@@ -38,6 +38,10 @@ sudo haxelib run openfl setup
 
 sudo openfl build neko
 
+To compile a Neko application, run lime build neko.
+
+To compile and launch a Neko application with one command, run lime test neko
+
 
 ## Clone repository and submodules
 
