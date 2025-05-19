@@ -19,7 +19,7 @@ A place to play with and experiment with GLSL shaders.
 
 ## Clone repository and submodules
 
-git clone https://https://github.com/N3oRay/Benchmark-Neko.git
+git clone https://github.com/N3oRay/Benchmark-Neko.git
 cd Benchmark-Neko
 
 
