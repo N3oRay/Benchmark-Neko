@@ -17,6 +17,14 @@ A place to play with and experiment with GLSL shaders.
   <img src="./prevu3.png" style="flex-grow: 1; flex-shrink: 1;" />
 </div>
 
+## Install Haxe
+''bash
+sudo apt install haxe
+''
+or
+
+https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
+
 ## Clone repository and submodules
 
 git clone https://github.com/N3oRay/Benchmark-Neko.git
