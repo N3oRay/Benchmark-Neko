@@ -18,10 +18,11 @@ A place to play with and experiment with GLSL shaders.
 </div>
 
 ## Install Haxe
-''bash
+
 sudo apt install haxe
-''
+<div style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0 0 2em 0;">
 or
+</div>
 
 https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
