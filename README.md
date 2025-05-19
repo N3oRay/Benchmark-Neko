@@ -43,4 +43,7 @@ cd Benchmark-Neko
 Haxe : https://haxe.org/
 These shaders are taken from http://glsl.heroku.com
 
+Openfl :
+https://github.com/openfl/openfl
+
 More source of any "effect" on glsl.heroku.com.
