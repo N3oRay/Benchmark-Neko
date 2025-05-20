@@ -38,11 +38,11 @@ sudo haxelib run openfl setup
 
 sudo openfl build neko
 
-## Build&RUN in HTML5
+## Build&RUN for HTML5
 
 sudo openfl build html5
 
-## Build&RUN in HTML5
+## Build&RUN for Linux
 
 sudo openfl build linux
 
