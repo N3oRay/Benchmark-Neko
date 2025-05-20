@@ -2,13 +2,13 @@
 <project>
 	
 	<meta title="Benchmark N3oray" package="org.openfl.benchmarkN3R" version="1.0.0" company="n3r" />
-	<app file="BenchmarkN3R" main="ApplicationMain" path="Export" />
+	<app file="BenchmarkN3R" main="Main" path="Export" />
+	<window require-shaders="true" />
 	
-	<source path="haxe" />
+	<source path="Source" />
 	
 	<haxelib name="openfl" />
-	<haxelib name="box2d" />
 	
-	<assets path="bin/assets" rename="assets" />
+	<assets path="Assets" rename="assets" />
 	
 </project>
