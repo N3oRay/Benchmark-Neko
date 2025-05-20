@@ -94,7 +94,7 @@ class Performance extends Sprite
 		var nextX:Float = padding;
 
 		/// ### LOGO
-		var logoSize = 50;
+		var logoSize = 65; //50
 		if (logoData!=null) {
 			logo = new Bitmap(logoData);
 			logo.smoothing = true;

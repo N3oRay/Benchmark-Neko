@@ -93,8 +93,7 @@ class Main extends Sprite
 
         // Affichier Performance:
         var performance = new Performance(Assets.getFont("assets/fonts/Platinum Sign.ttf"),        //any font you want
-                                      //Assets.getBitmapData("assets/graphics/logo.png"), //null or any BitmapData (suggested 50x50pixels)
-                                      null,  
+                                      Assets.getBitmapData("assets/preloader/logo.png"), //null or any BitmapData (suggested 50x50pixels)
                                       true,  // true if you want to see the APP information
                                       true); // true if you want to see the FPS Graph
         Lib.current.stage.addChild(performance);  
