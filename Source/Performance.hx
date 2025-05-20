@@ -112,7 +112,7 @@ class Performance extends Sprite
 	    	appText.width = 500;
 			appText.selectable = false;
 			appText.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
-			appText.text = Lib.packageName + "\nVERSION " + Lib.version + "\n" + Lib.company;
+			// appText.text = Lib.packageName + "\nVERSION " + Lib.version + "\n" + Lib.company;
 			appText.embedFonts = true;
 			nextX = appText.x+appText.textWidth+padding;
 		}
