@@ -21,10 +21,10 @@ import openfl.display.BitmapData;
 // please provide this files (or change them) in your assets folder
 // and add this line to your project.xml
 // <assets path="assets/preloader" include="*" if="web" />
-@:font("assets/preloader/square.ttf") class DefaultFont extends Font {}
+@:font("assets/fonts/Platinum Sign.ttf") class DefaultFont extends Font {}
 @:bitmap("assets/preloader/logo.png") class Splash extends BitmapData {}
 
-class Preloader extends NMEPreloader
+class Preloader extends Sprite // extends NMEPreloader
 {
     // **** CUSTOMISE HERE ****
     static var color = 0xff9600; //the main color

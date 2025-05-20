@@ -27,6 +27,7 @@ import openfl.events.MouseEvent;
 import openfl.net.URLRequest;
 
 import Performance;
+import Preloader_FF;
 
 #if (lime >= "7.0.0")
 import lime.graphics.WebGLRenderContext;
@@ -83,6 +84,10 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+
+        // Affichier Preload
+        var preload = new Preloader_FF(); 
+        Lib.current.stage.addChild(preload); 
 
 		glFragmentShaders = randomizeArray(glFragmentShaders);
 		currentIndex = 0;

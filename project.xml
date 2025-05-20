@@ -10,5 +10,7 @@
 	<haxelib name="openfl" />
 	
 	<assets path="bin/assets" rename="assets" />
+    <assets path="bin/assets/preloader" library="preloader" />
+    <library name="preloader" id="preloader" embed="true" />
 	
 </project>
