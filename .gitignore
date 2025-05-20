@@ -1,0 +1,5 @@
+Export/ # Ignore Export folders
+temp/ # Ignore temp folders
+*.tmp      # all .tmp files 
+log[0-9].txt # log1.txt, log2.txt, ... log9.txt 
+*.old # ancien
