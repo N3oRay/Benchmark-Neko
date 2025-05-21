@@ -28,6 +28,19 @@ import openfl.net.URLRequest;
 
 import Performance;
 import Preloader_FF;
+import Popup;
+
+/**
+ * Main.hx
+ * Haxe/OpenFL class PopUP
+ *
+ * More informations here
+ * https://github.com/N3oRay/
+ *
+ * @author Serge LOPES
+ * @licence MIT
+ *
+ */
 
 #if (lime >= "7.0.0")
 import lime.graphics.WebGLRenderContext;
@@ -85,9 +98,11 @@ class Main extends Sprite
 	{
 		super();
 
-        // Affichier Preload
+        // Afficher Preload
         var preload = new Preloader_FF(); 
         Lib.current.stage.addChild(preload); 
+
+      
 
 		glFragmentShaders = randomizeArray(glFragmentShaders);
 		currentIndex = 0;
@@ -102,6 +117,11 @@ class Main extends Sprite
                                       true,  // true if you want to see the APP information
                                       true); // true if you want to see the FPS Graph
         Lib.current.stage.addChild(performance);  
+
+
+        // Afficher POPup
+        var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf")); 
+        Lib.current.stage.addChild(popup); 
 
 /**
         var my_txt:TextField new TextField();
