@@ -87,17 +87,8 @@ class Main extends Sprite
 	private var glVertexPosition:Int;
 	private var initialized:Bool;
 	private var startTime:Int;
-
     private var perf:Performance;
 
-/**
-    private var fps:FPS;
-
-    private float:fps=0.0f;
-    private float before=0.0f;
-    private char strFPS[20] = {0};
-    private float now = (GetTickCount()*0.001f);
-**/
 
 	public function new()
 	{
@@ -130,7 +121,9 @@ class Main extends Sprite
         
 
         // Affichier Menu:
+        /**
         var menu = new MenuContext([
+         
             { label: "Play", action: function() {
                 trace("Play BenchMark option selected!");
                 // Add your game start logic here
@@ -141,7 +134,7 @@ class Main extends Sprite
 
                 var score1fps = new ScoreFPS1(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
                 Lib.current.stage.addChild(score1fps); 
-            }},
+            }}, 
             { label: "GPU Spec", action: function() {
                 trace("GPU Spec option selected!");
                 var gpuspecs = new GPUSpecs(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
@@ -149,49 +142,13 @@ class Main extends Sprite
             }}
         ]);
         Lib.current.stage.addChild(menu);
-
+        **/
 
         
 
-/**
-        var my_txt:TextField new TextField();
-        my_txt.text = "Flash Macintosh version"; 
-        var my_fmt:TextFormat = new TextFormat(); 
-        my_fmt.color = 0xFF0000; my_txt.defaultTextFormat = my_fmt;
-        my_txt.setSelection(6,15); // partial text selected - defaultTextFormat
-        not applied my_txt.setSelection(6,23); // text selected to end -
-        defaultTextFormat applied my_txt.replaceSelectedText("Windows version");
 
-        ++fps;
-
-        if(now-before&gt;1.0f)
-        {
-	        before=now;
-	        sprintf(strFPS,"FPS: %d",int(fps));
-            // defaultTextFormat applied my_txt.replaceSelectedText("Windows version");
-	        fps=0.0f;
-        }
-**/
 	}
-/**
-    public function fps()
-    {
-        static float fps=0.0f;
-        static float before=0.0f;
-        static char strFPS[20] = {0};
-        static float now = (GetTickCount()*0.001f);
 
-        ++fps;
-
-        if(now-before&gt;1.0f)
-        {
-	        before=now;
-	        sprintf(strFPS,"FPS: %d",int(fps));
-	        fps=0.0f;
-        }
-
-    }
-    **/
 	private function enterFrame(event:Event):Void
 	{
 		#if !flash
@@ -319,8 +276,7 @@ class Main extends Sprite
 		gl.useProgram(glCurrentProgram);
 
 		gl.uniform1f(glTimeUniform, time / 1000);
-		gl
-			.uniform2f(glMouseUniform, 0.1, 0.1); // gl.uniform2f (glMouseUniform, (stage.mouseX / stage.stageWidth) * 2 - 1, (stage.mouseY / stage.stageHeight) * 2 - 1);
+		gl.uniform2f(glMouseUniform, 0.1, 0.1); // gl.uniform2f (glMouseUniform, (stage.mouseX / stage.stageWidth) * 2 - 1, (stage.mouseY / stage.stageHeight) * 2 - 1);
 		gl.uniform2f(glResolutionUniform, stage.stageWidth, stage.stageHeight);
 		gl.uniform1i(glBackbufferUniform, 0);
 		gl.uniform2f(glSurfaceSizeUniform, stage.stageWidth, stage.stageHeight);

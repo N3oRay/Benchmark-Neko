@@ -5,13 +5,13 @@ import openfl.events.Event;
 import openfl.Lib;
 import openfl.text.TextField;
 import openfl.display.SimpleButton;
-//import openfl.display.Shape;
 import openfl.display.DisplayObject;
 import openfl.text.Font;
 import openfl.Assets;
 import openfl.text.TextFormat;
 import openfl.events.MouseEvent;
 import Popup;
+import openfl.display.Shape;
 
 
 
@@ -22,14 +22,23 @@ class ScoreFPS extends Sprite {
     var fpsText:TextField;
     var startTime:Float = 0;
     var up:DisplayObject;
+    private var toggleButton1:SimpleButton;
+    private var toggleButton2:SimpleButton;
+    private var toggleButton3:SimpleButton;
+    private var isVisible:Bool = false;
+    private var stateboard:Sprite;
 
     public function new(font:Font) {
         super();
-
+        
+        stateboard = new Sprite();
         // Draw the button background
-        graphics.beginFill(0x333333); // color
-        graphics.drawRoundRect(440, 50, 400, 80, 10, 10); // x, y, width, height, ellipseWidth, ellipseHeight
-        graphics.endFill();
+        //myGraphic = new DisplayObject();
+        var myGraphic = new Shape();
+        myGraphic.graphics.beginFill(0x333333); // color
+        myGraphic.graphics.drawRoundRect(440, 50, 400, 80, 10, 10); // x, y, width, height, ellipseWidth, ellipseHeight
+        myGraphic.graphics.endFill();
+        stateboard.addChild(myGraphic); // This works because state is a Sprite
 
         // Add effects: shadow and glow
         this.filters = [
@@ -39,57 +48,88 @@ class ScoreFPS extends Sprite {
 
         fpsText = new TextField();
         fpsText.defaultTextFormat = new TextFormat("_sans", 10, 0xFFFFFF, true);
-        //fpsText.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
         fpsText.width = 400;
         fpsText.height = 80;
         fpsText.x = 440;
         fpsText.y = 50;
-        addChild(fpsText);
-        up= new DisplayObject();
+        stateboard.addChild(fpsText);
 
-        addChild(up);
-        addChild(makeButton("START", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 0, 5, startMeasure));
-        addChild(makeButton("STOP", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 120, 5, stopMeasure));
-        addChild(makeButton("RAZ", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 240, 5, testFunction));
+        //Init 
+        stateboard.visible = isVisible;
+        addChild(stateboard);
+        toggleButton1 = makeButton("START", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 220, 5, startMeasure);
+        toggleButton2 = makeButton("STOP", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 280, 5, stopMeasure);
+        toggleButton3 = makeButton("RAZ", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 340, 5, testFunction);
+        // Add click listener
+        toggleButton1.addEventListener(MouseEvent.CLICK, toggleGraphic);
+        //toggleButton2.addEventListener(MouseEvent.CLICK, toggleGraphic);
+        toggleButton3.addEventListener(MouseEvent.CLICK, disableGraphic);
+
+        addChild(toggleButton1);
+        addChild(toggleButton2);
+        addChild(toggleButton3);
+
     }
 
-    function makeButton(label:String, font:Font, x:Float, y:Float, onClick:Void->Void):SimpleButton {
+    private function toggleGraphic(e:MouseEvent):Void {
+        isVisible = !isVisible;
+        stateboard.visible = isVisible;
+    }
+
+    private function disableGraphic(e:MouseEvent):Void {
+        isVisible = false;
+        stateboard.visible = isVisible;
+    }
+
+    function drawButtonState(label:String, font:Font, x:Float, y:Float, color:Int):Sprite {
+
+        var state = new Sprite();
 
         // Draw the button background
-        graphics.beginFill(0x999999); // color
-        graphics.drawRoundRect(440 + x, y, 110, 40, 10, 10); // x, y, width, height, ellipseWidth, ellipseHeight
-        graphics.endFill();
+        //upState = new DisplayObject();
+        var upState = new Shape();
+        upState.graphics.beginFill(color); // color
+        upState.graphics.drawRoundRect(x, y, 110, 40, 10, 10); // x, y, width, height, ellipseWidth, ellipseHeight
+        upState.graphics.endFill();
+        state.addChild(upState); // This works because state is a Sprite
 
         // Add effects: shadow and glow
         this.filters = [
             new DropShadowFilter(4, 45, 0x000000, 0.6, 8, 8, 1, 1),
             new GlowFilter(0xffffff, 0.7, 10, 10, 2, 1)
         ];
-       /**
-        
-      **/
 
         var txt:TextField = new TextField();
         //txt.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF, true);
-        txt.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
+        txt.defaultTextFormat = new TextFormat(font.fontName, 12, 0x444444);
         txt.text = label;
         txt.width = 110;
         txt.height = 40;
-        txt.x = 440;
+        txt.x = x;
         txt.selectable = false;
-        //up.addChild(txt);
+        state.addChild(txt);
+        
+        return state;
+    }
 
-        var btn = new SimpleButton(txt, txt, txt, txt);
+    private function makeButton(label:String, font:Font, x:Float, y:Float, onClick:Void->Void):SimpleButton {
+        var upState = drawButtonState(label, font, x, y, 0xCCCCCC);
+        var overState = drawButtonState(label, font, x, y, 0xAAAAAA);
+        var downState = drawButtonState(label, font, x, y, 0x888888);
+        var hitTestState = drawButtonState(label, font, x, y, 0xCCCCCC);
+
+        var btn = new SimpleButton(upState, overState, downState, hitTestState);
         btn.x = x;
         btn.y = y;
         btn.addEventListener(MouseEvent.MOUSE_DOWN, function(_) onClick());
+
         return btn;
     }
 
     public function startMeasure():Void {
         if (!measuring) {
             // Afficher POPup
-            var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS."); 
+            var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS. 1 MIN..."); 
             Lib.current.stage.addChild(popup); 
 
             measuring = true;
@@ -106,7 +146,7 @@ class ScoreFPS extends Sprite {
     public function stopMeasure():Void {
         if (measuring) {
             // Afficher POPup
-            var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK STOP."); 
+            var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK STOP..."); 
             Lib.current.stage.addChild(popup); 
 
             measuring = false;
@@ -133,7 +173,7 @@ class ScoreFPS extends Sprite {
         fpsSamples.push(currentFPS);
         lastFrameTime = now;
         fpsText.text = "Measuring FPS... (" + fpsSamples.length + " frames)";
-        // Optional: auto stop after 10 seconds
-        if (now - startTime >= 10000) stopMeasure();
+        // Optional: auto stop after 60 seconds
+        if (now - startTime >= 60000) stopMeasure();
     }
 }
