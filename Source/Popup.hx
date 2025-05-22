@@ -62,7 +62,7 @@ class Popup extends Sprite
 
 	private function onLoop(_):Void
 	{	
-        ptext.x += 6;
+        ptext.x += 1;
         
         if (ptext.x == 800){
         ptext.x = 0;
