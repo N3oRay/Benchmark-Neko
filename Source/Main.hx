@@ -134,6 +134,11 @@ class Main extends Sprite
             { label: "Play", action: function() {
                 trace("Play BenchMark option selected!");
                 // Add your game start logic here
+
+                // Afficher POPup
+                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS."); 
+                Lib.current.stage.addChild(popup); 
+
                 var score1fps = new ScoreFPS1(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
                 Lib.current.stage.addChild(score1fps); 
             }},
@@ -146,9 +151,7 @@ class Main extends Sprite
         Lib.current.stage.addChild(menu);
 
 
-        // Afficher POPup
-        var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf")); 
-        Lib.current.stage.addChild(popup); 
+        
 
 /**
         var my_txt:TextField new TextField();

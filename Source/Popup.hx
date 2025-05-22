@@ -34,12 +34,12 @@ class Popup extends Sprite
     private var appText:TextField;
 
     private var skipped = 0;
-    private var skip = 720;
+    private var skip = 360;
 	private var times:Array<Float>;
 
        
 
-	public function new(font:Font) 
+	public function new(font:Font, label:String) 
 	{
 		super();
 
@@ -49,7 +49,7 @@ class Popup extends Sprite
     ptext.y = 150;
     ptext.selectable = false;
     ptext.width = 800;
-    ptext.text = "BENCHMARK IN PROGRESS.";
+    ptext.text = label; //"BENCHMARK IN PROGRESS."
     addChild (ptext);
 
 
@@ -62,7 +62,7 @@ class Popup extends Sprite
 
 	private function onLoop(_):Void
 	{	
-        ptext.x += 2;
+        ptext.x += 4;
         
         if (ptext.x == 800){
         ptext.x = 0;
