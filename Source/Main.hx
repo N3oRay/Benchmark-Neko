@@ -25,10 +25,15 @@ import openfl.display.Tileset;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.net.URLRequest;
+import openfl.display.Shape;
 
 import Performance;
 import Preloader_FF;
 import Popup;
+import MenuContext;
+import ScoreFPS;
+import ScoreFPS1;
+import GPUSpecs;
 
 /**
  * Main.hx
@@ -117,6 +122,28 @@ class Main extends Sprite
                                       true,  // true if you want to see the APP information
                                       true); // true if you want to see the FPS Graph
         Lib.current.stage.addChild(performance);  
+
+        // Score menu / GPSSPEC init
+        var scorefps = new ScoreFPS(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
+        Lib.current.stage.addChild(scorefps);     
+        
+        
+
+        // Affichier Menu:
+        var menu = new MenuContext([
+            { label: "Play", action: function() {
+                trace("Play BenchMark option selected!");
+                // Add your game start logic here
+                var score1fps = new ScoreFPS1(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
+                Lib.current.stage.addChild(score1fps); 
+            }},
+            { label: "GPU Spec", action: function() {
+                trace("GPU Spec option selected!");
+                var gpuspecs = new GPUSpecs(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
+                Lib.current.stage.addChild(gpuspecs); 
+            }}
+        ]);
+        Lib.current.stage.addChild(menu);
 
 
         // Afficher POPup

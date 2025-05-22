@@ -2,6 +2,9 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.Lib;
 import openfl.text.TextField;
+import openfl.text.Font;
+import openfl.text.TextFormat;
+import openfl.geom.ColorTransform;
 
 /**
 
@@ -17,6 +20,7 @@ N'hésitez pas à me contacter si vous souhaitez une version qui s'arrête sur p
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.Lib;
+import openfl.Assets;
 import openfl.text.TextField;
 
 class ScoreFPS1 extends Sprite {
@@ -26,10 +30,16 @@ class ScoreFPS1 extends Sprite {
     var lastFrameTime:Float = 0;
     var fpsText:TextField;
 
-    public function new() {
+    public function new(font:Font) {
         super();
         startTime = Lib.getTimer();
         fpsText = new TextField();
+        // var fpsText:CustomTextField = new CustomTextField();
+        //fpsText.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
+        fpsText.defaultTextFormat = new TextFormat("_sans", 10, 0xFFFFFF, true);
+        //fpsText.textColor = 0xffffff;
+        //fpsText.highlightColor = 0xffffff;
+        fpsText.y = 350;
         fpsText.width = 400;
         fpsText.height = 60;
         addChild(fpsText);
@@ -69,3 +79,5 @@ class ScoreFPS1 extends Sprite {
         }
     }
 }
+
+

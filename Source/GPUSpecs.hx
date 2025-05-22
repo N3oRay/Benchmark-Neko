@@ -1,12 +1,13 @@
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.text.Font;
 import openfl.system.Capabilities;
 import lime.graphics.opengl.GL;
 import lime.app.Application;
 
 class GPUSpecs extends Sprite {
-    public function new() {
+    public function new(font:Font) {
         super();
         var specs:String = getGPUSpecs();
         var tf = new TextField();
@@ -14,7 +15,9 @@ class GPUSpecs extends Sprite {
         tf.height = 600;
         tf.multiline = true;
         tf.wordWrap = true;
-        tf.defaultTextFormat = new TextFormat("_sans", 18, 0x000000);
+        //tf.defaultTextFormat = new TextFormat("_sans", 18, 0x000000);
+        tf.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
+        tf.y = 500;
         tf.text = specs;
         addChild(tf);
     }

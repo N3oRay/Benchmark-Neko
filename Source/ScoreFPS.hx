@@ -3,8 +3,14 @@ import openfl.events.Event;
 import openfl.Lib;
 import openfl.text.TextField;
 import openfl.display.SimpleButton;
-import openfl.display.Shape;
+//import openfl.display.Shape;
+//import openfl.display.DisplayObject;
+import openfl.text.Font;
+import openfl.Assets;
 import openfl.text.TextFormat;
+import openfl.events.MouseEvent;
+
+
 
 class ScoreFPS extends Sprite {
     var fpsSamples:Array<Float> = [];
@@ -12,38 +18,46 @@ class ScoreFPS extends Sprite {
     var lastFrameTime:Float = 0;
     var fpsText:TextField;
     var startTime:Float = 0;
+    //var up:DisplayObject;
 
-    public function new() {
+    public function new(font:Font) {
         super();
         fpsText = new TextField();
+        fpsText.defaultTextFormat = new TextFormat("_sans", 10, 0xFFFFFF, true);
+        //fpsText.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
         fpsText.width = 400;
         fpsText.height = 80;
-        fpsText.y = 80;
+        fpsText.x = 450;
+        fpsText.y = 35;
         addChild(fpsText);
-
-        addChild(makeButton("Start", 10, 10, startMeasure));
-        addChild(makeButton("Stop", 120, 10, stopMeasure));
-        addChild(makeButton("Test", 230, 10, testFunction));
+        //up= new DisplayObject();
+        //addChild(up);
+        addChild(makeButton("START", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 10, 5, startMeasure));
+        addChild(makeButton("STOP", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 100, 5, stopMeasure));
+        addChild(makeButton("RAZ", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 210, 5, testFunction));
     }
 
-    function makeButton(label:String, x:Float, y:Float, onClick:Void->Void):SimpleButton {
-        var up:Shape = new Shape();
+    function makeButton(label:String, font:Font, x:Float, y:Float, onClick:Void->Void):SimpleButton {
+        /**
         up.graphics.beginFill(0xCCCCCC);
         up.graphics.drawRect(0, 0, 100, 40);
         up.graphics.endFill();
+        **/
 
         var txt:TextField = new TextField();
-        txt.defaultTextFormat = new TextFormat("_sans", 18, 0x000000, true);
+        //txt.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF, true);
+        txt.defaultTextFormat = new TextFormat(font.fontName, 12, 0xededed);
         txt.text = label;
-        txt.width = 100;
+        txt.width = 120;
         txt.height = 40;
+        txt.x = 450;
         txt.selectable = false;
-        up.addChild(txt);
+        //up.addChild(txt);
 
-        var btn = new SimpleButton(up, up, up, up);
+        var btn = new SimpleButton(txt, txt, txt, txt);
         btn.x = x;
         btn.y = y;
-        btn.addEventListener(Event.CLICK, function(_) onClick());
+        btn.addEventListener(MouseEvent.MOUSE_DOWN, function(_) onClick());
         return btn;
     }
 
@@ -66,12 +80,12 @@ class ScoreFPS extends Sprite {
             for (fps in fpsSamples) sumFPS += fps;
             var avgFPS = fpsSamples.length > 0 ? sumFPS / fpsSamples.length : 0;
             fpsText.text = "Measurement stopped.\nAverage FPS: " + Std.string(avgFPS) +
-                           "\nSum total FPS: " + Std.string(sumFPS);
+                           "\n SCORE Sum total FPS: " + Std.string(sumFPS);
         }
     }
 
     public function testFunction():Void {
-        fpsText.text = "Test button clicked!";
+        fpsText.text = "";
         // Place your test logic here
     }
 
