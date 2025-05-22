@@ -12,5 +12,10 @@
 	<assets path="bin/assets" rename="assets" />
     <assets path="bin/assets/preloader" library="preloader" />
     <library name="preloader" id="preloader" embed="true" />
+
+//limite max 200 fps
+    <window vsync="false" fps="200"/>
+
+//stage.window.frameRate = 30;
 	
 </project>

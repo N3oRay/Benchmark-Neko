@@ -56,6 +56,8 @@ import lime.graphics.opengl.WebGLContext in WebGLRenderContext;
 	
 class Main extends Sprite
 {
+
+    //private var glfwSwapInterval(0); // test unlimit GPU
 	private static var glFragmentShaders = [
 		#if mobile
 		"1", "10", "11", "12", "12288.0", "12290.0", "12293.0", "12294.0", "12297.0", "12326.0", "12366.0", "12441.0", 
