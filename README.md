@@ -39,9 +39,9 @@ sudo haxelib install openfl
 
 sudo haxelib run openfl setup
 
-## Build&RUN neko
+## Build&RUN android
 
-sudo openfl build neko
+sudo openfl build android
 
 ## Build&RUN for HTML5
 
@@ -50,6 +50,10 @@ sudo openfl build html5
 ## Build&RUN for Linux
 
 sudo openfl build linux
+
+## Build&RUN for Windows
+
+sudo openfl build neko
 
 ## Run compile with lime
 
