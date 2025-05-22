@@ -4,13 +4,18 @@ import openfl.text.TextFormat;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
+typedef MenuOption = {
+    var label:String;
+    var action:Void->Void;
+}
+
 class MenuContext extends Sprite {
-    private var options:Array<String>;
+    private var options:Array<MenuOption>;
     private var selectedIndex:Int = 0;
     private var textFields:Array<TextField> = [];
     private var format:TextFormat;
 
-    public function new(options:Array<String>) {
+    public function new(options:Array<MenuOption>) {
         super();
         this.options = options;
         format = new TextFormat("Arial", 32, 0xFFFFFF);
@@ -23,14 +28,13 @@ class MenuContext extends Sprite {
     }
 
     private function display():Void {
-        // Remove previous text fields
         for (tf in textFields) removeChild(tf);
         textFields = [];
         for (i in 0...options.length) {
             var tf = new TextField();
             tf.defaultTextFormat = format;
             tf.width = 400;
-            tf.text = (i == selectedIndex ? "> " : "  ") + options[i];
+            tf.text = (i == selectedIndex ? "> " : "  ") + options[i].label;
             tf.textColor = (i == selectedIndex) ? 0xFFFF00 : 0xFFFFFF;
             tf.y = 50 + i * 40;
             addChild(tf);
@@ -47,8 +51,9 @@ class MenuContext extends Sprite {
                 selectedIndex = (selectedIndex + 1) % options.length;
                 display();
             case Keyboard.ENTER:
-                trace("Selected option: " + options[selectedIndex]);
-                // Implement action for selection here
+                if (options[selectedIndex].action != null) {
+                    options[selectedIndex].action();
+                }
         }
     }
 }
