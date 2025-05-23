@@ -39,6 +39,8 @@ sudo haxelib install openfl
 
 sudo haxelib install actuate
 
+sudo haxelib install lime
+
 sudo haxelib run openfl setup
 
 ## Build&RUN android
