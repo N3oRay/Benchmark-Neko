@@ -34,6 +34,7 @@ import MenuContext;
 import ScoreFPS;
 import ScoreFPS1;
 import GPUSpecs;
+import Gear;
 
 /**
  * Main.hx
@@ -123,7 +124,7 @@ class Main extends Sprite
         
 
         // Affichier Menu:
-        /**
+      /**
         var menu = new MenuContext([
          
             { label: "Play", action: function() {
@@ -139,13 +140,17 @@ class Main extends Sprite
             }}, 
             { label: "GPU Spec", action: function() {
                 trace("GPU Spec option selected!");
+
+                var pGear = new Gear();
+                Lib.current.stage.addChild(pGear); 
+
                 var gpuspecs = new GPUSpecs(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
                 Lib.current.stage.addChild(gpuspecs); 
             }}
         ]);
         Lib.current.stage.addChild(menu);
-        **/
-
+      
+**/
         
 
 
