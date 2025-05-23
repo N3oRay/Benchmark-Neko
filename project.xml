@@ -9,6 +9,7 @@
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
+	<haxelib name="lime" />
 	
 	<assets path="bin/assets" rename="assets" />
     <assets path="bin/assets/preloader" library="preloader" />
