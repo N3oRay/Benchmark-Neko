@@ -33,15 +33,21 @@ https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
 ## Install & Config on linux
 
-sudo haxelib setup
+    $sudo haxelib setup
 
-sudo haxelib install openfl
+## Install OpenFL
 
-sudo haxelib install actuate
+$ haxelib install openfl
+$ haxelib run openfl setup
+    
+#### Install Actuate
 
-sudo haxelib install lime
+$ haxelib install actuate
+    
+#### Install Lime
 
-sudo haxelib run openfl setup
+$ haxelib install lime
+
 
 ## Build&RUN android
 
