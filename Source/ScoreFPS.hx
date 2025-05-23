@@ -106,6 +106,7 @@ class ScoreFPS extends Sprite {
         txt.width = 110;
         txt.height = 40;
         txt.x = x;
+        txt.y = y + 5;
         txt.selectable = false;
         state.addChild(txt);
         

@@ -1,5 +1,8 @@
 package;
 
+import lime.app.Application;
+import lime.ui.Window;
+import lime.graphics.RenderContext;
 import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLShader;
@@ -91,11 +94,13 @@ class Main extends Sprite
 	private var initialized:Bool;
 	private var startTime:Int;
     private var perf:Performance;
+    //public var meta:String;
 
 
 	public function new()
 	{
 		super();
+
 
         // Afficher Preload
         var preload = new Preloader_FF(); 
@@ -124,13 +129,11 @@ class Main extends Sprite
         
 
         // Affichier Menu:
-      /**
+        /**
         var menu = new MenuContext([
-         
+  
             { label: "Play", action: function() {
                 trace("Play BenchMark option selected!");
-                // Add your game start logic here
-
                 // Afficher POPup
                 var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS."); 
                 Lib.current.stage.addChild(popup); 
@@ -141,17 +144,24 @@ class Main extends Sprite
             { label: "GPU Spec", action: function() {
                 trace("GPU Spec option selected!");
 
-                var pGear = new Gear();
-                Lib.current.stage.addChild(pGear); 
+                //var pGear = new Gear();
+                //Lib.current.stage.addChild(pGear); 
+                 // Afficher POPup
+                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"LOAD SYSTEMS."); 
+                Lib.current.stage.addChild(popup); 
 
                 var gpuspecs = new GPUSpecs(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
                 Lib.current.stage.addChild(gpuspecs); 
+            }}, 
+            { label: "Exit", action: function() {
+                trace("Exit option selected!");
+
+                exit(); 
             }}
         ]);
         Lib.current.stage.addChild(menu);
-      
-**/
-        
+
+        **/
 
 
 	}
@@ -267,6 +277,8 @@ class Main extends Sprite
 		return randomArray;
 	}
 
+
+
 	private function render(event:RenderEvent):Void
 	{
 		var renderer:OpenGLRenderer = cast event.renderer;
@@ -311,4 +323,13 @@ class Main extends Sprite
            
     
 	}
+
+    function exit() {
+        #if (windows || cpp)
+            Sys.exit(0);
+        #else
+            openfl.system.System.exit(0);
+        #end                
+    }
+
 }

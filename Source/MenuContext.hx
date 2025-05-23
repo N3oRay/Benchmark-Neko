@@ -18,7 +18,7 @@ class MenuContext extends Sprite {
     public function new(options:Array<MenuOption>) {
         super();
         this.options = options;
-        format = new TextFormat("Arial", 25, 0xFFFFFF);
+        format = new TextFormat("Arial", 15, 0xFFFFFF);
         addEventListener(openfl.events.Event.ADDED_TO_STAGE, onAdded);
     }
 
@@ -36,7 +36,7 @@ class MenuContext extends Sprite {
             tf.width = 400;
             tf.text = (i == selectedIndex ? "> " : "  ") + options[i].label;
             tf.textColor = (i == selectedIndex) ? 0xFFFF00 : 0xFFFFFF;
-            tf.y = 60 + i * 40;
+            tf.y = 60 + i * 30;
             addChild(tf);
             textFields.push(tf);
         }

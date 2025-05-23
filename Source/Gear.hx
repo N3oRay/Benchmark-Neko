@@ -30,7 +30,7 @@ class Gear extends Sprite {
         #if (openfl_html5 || openfl_native)
         var loader = new Loader();
         loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onGearLoaded);
-        loader.load(new openfl.net.URLRequest("assets/gear.svg"));
+        loader.load(new openfl.net.URLRequest("assets/img/gear.svg"));
         #else
         // Fallback: draw a gear with code
         createGear();

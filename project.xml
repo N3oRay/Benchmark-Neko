@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project>
+<project
+	xmlns="http://lime.openfl.org/project/1.0.4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
+
+    <set name="red" />
+    <window background="#FF0000" if="red" />
+
+    <define name="fullscreen" />
+    <window fullscreen="true" if="fullscreen" />
+
 	
 	<meta title="Benchmark N3oray" package="org.openfl.benchmarkN3R" version="1.0.0" company="n3r" />
-	<app file="BenchmarkN3R" main="Main" path="Export" />
+	<app file="BenchmarkN3R" main="Main" path="Export" preloader="Preloader_FF"/>
+
+
 	<window require-shaders="true" />
 	
 	<source path="Source" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />	
+
 	<assets path="bin/assets" rename="assets" />
-    <assets path="bin/assets/preloader" library="preloader" />
+
     <library name="preloader" id="preloader" embed="true" />
 
 //limite max 200 fps
     <window vsync="false" fps="200"/>
 
+
 //stage.window.frameRate = 30;
+<window width="800" height="600" background="#FFFFFF" fps="200" />
+<window hardware="true" allow-shaders="true" require-shaders="true" depth-buffer="false" stencil-buffer="false" />
+<window fullscreen="false" resizable="true" borderless="false" vsync="false" />
+<window orientation="portrait" />
+
+
+
 	
 </project>
