@@ -22,6 +22,11 @@ A place to play with and experiment with GLSL shaders.
   <img src="./prevu3.png" style="flex-grow: 1; flex-shrink: 1;" />
 </div>
 
+### Contenu en Francais
+
+Pour les mises à jour et les discussions en Francais, suivez-moi sur Instagram
+[![Instagram Follow N3oray](https://raw.githubusercontent.com/N3oRay/inpaint-web/main/media/instagram-s.png)](https://www.instagram.com/n3oray/)
+
 ## Install Haxe
 
 sudo apt install haxe
