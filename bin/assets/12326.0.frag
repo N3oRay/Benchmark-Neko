@@ -1,6 +1,5 @@
-// anal leakage
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 #extension GL_OES_standard_derivatives : enable
@@ -222,22 +221,22 @@ void main()
 				1.0, 0.0, 0.0, col, spiral4TextureRates);
 
 	//========================================================
-	// vec3 spiral5TextureRates = vec3(0.0);
-	// addSpiral(vec2(0.0, 0.0), pos, 25.0, -0.25, time, 
-	// 			vec3(0.01, 0.03, 0.02), 
-	// 			vec3(90.0, 105.0, 425.0), 
-	// 			vec3(10.0, 4.0, 9.0), 
-	// 			0.8, spiral4TextureRates, 
-	// 			-1.0, 1.0, 1.0, col, spiral5TextureRates);
+	vec3 spiral5TextureRates = vec3(0.0);
+	 addSpiral(vec2(0.0, 0.0), pos, 25.0, -0.25, time, 
+	 			vec3(0.01, 0.03, 0.02), 
+	 			vec3(90.0, 105.0, 425.0), 
+	 			vec3(10.0, 4.0, 9.0), 
+	 			0.8, spiral4TextureRates, 
+	 			-1.0, 1.0, 1.0, col, spiral5TextureRates);
 
-	// addSpiral(vec2(0.0, 0.0), pos, 25.0, -0.25, time, 
-	// 			vec3(0.05, 0.01, 0.25), 
-	// 			vec3(110.0, 380.0, 105.0), 
-	// 			vec3(9.0, 5.0, 3.0), 
-	// 			0.9, spiral5TextureRates, 
-	// 			-1.0, 0.0, 0.0, col, spiral5TextureRates);
-	//col += colCircle * vec3(0.1, 0.5, 1.0);
-	//col += colCircle2 * vec3(1.0, 0.5, 0.1);
+	addSpiral(vec2(0.0, 0.0), pos, 25.0, -0.25, time, 
+	 			vec3(0.05, 0.01, 0.25), 
+	 			vec3(110.0, 380.0, 105.0), 
+	 			vec3(9.0, 5.0, 3.0), 
+	 			0.9, spiral5TextureRates, 
+	 			-1.0, 0.0, 0.0, col, spiral5TextureRates);
+	col += colCircle * vec3(0.1, 0.5, 1.0);
+	col += colCircle2 * vec3(1.0, 0.5, 0.1);
 
 
 	gl_FragColor = vec4 (col, 1.0); 

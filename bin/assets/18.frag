@@ -1,8 +1,12 @@
+// Original by @N3oray, reworked for clarity & structure
+
+
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 uniform float time;
+uniform vec2 mouse;
 uniform vec2 resolution;
 varying vec2 surfacePosition;
 
@@ -159,14 +163,24 @@ float caustics(vec2 uv, float t) {
     return c * 0.5 + 0.5;
 }
 
-void main(void) {
-    // --- Water Turbulence Effect (as before) ---
+
+void main( void ) {
+
+	vec2 position = ( gl_FragCoord.xy / resolution.xy ) + mouse / 4.0;
+
+	float color = 0.0;
+	color += sin( position.x * cos( time / 15.0 ) * 80.0 ) + cos( position.y * cos( time / 15.0 ) * 10.0 );
+	color += sin( position.y * sin( time / 10.0 ) * 40.0 ) + cos( position.x * sin( time / 25.0 ) * 40.0 );
+	color += sin( position.x * sin( time / 5.0 ) * 10.0 ) + sin( position.y * sin( time / 35.0 ) * 80.0 );
+	color *= sin( time / 10.0 ) * 0.5;
+	
+	// --- Water Turbulence Effect (as before) ---
     vec2 uv = surfacePosition * 8.0;
     vec2 turbulence = uv;
 
-    float turbulenceSum = 0.2;
-    float intensity = 0.8;
-    const int MAX_ITER = 96;
+    float turbulenceSum = 0.5;
+    float intensity = 0.2;
+    const int MAX_ITER = 20;
 
     for (int i = 0; i < MAX_ITER; i++) {
         float iter = float(i + 1);
@@ -183,25 +197,25 @@ void main(void) {
     }
     turbulenceSum /= float(MAX_ITER);
 
-    float pulse1 = abs(sin(time * 5.0));
+    float pulse1 = abs(sin(time * 1.0));
     float pulse2 = pow(sin(time * 3.0), 0.25);
 
-    float hue = mod(0.25 + turbulenceSum * 0.23 + time * 0.06 + pulse1 * 0.07, 1.0);
-    float sat = 0.70 + 0.25 * sin(time + turbulenceSum * 1.5);
-    float val = 0.75 + 0.20 * pulse2 + 0.10 * turbulenceSum;
+    float hue = mod(0.25 + turbulenceSum * 0.23 + time * 0.06 * 0.07, 1.0);
+    float sat = 0.70 + 0.25 * sin(time + turbulenceSum * 0.5);
+    float val = 0.75 + 0.20 + 0.10 * turbulenceSum;
     vec3 vividColor = hsv2rgb(vec3(hue, sat, val));
 
-    float spark = sparkle(surfacePosition, time * 1.5);
-    vividColor += vec3(spark) * 0.7 * (0.85 + 0.15 * pulse1);
+    float spark = sparkle(surfacePosition, time * 0.2);
+    vividColor += vec3(spark) * 0.7 * (0.85 + 0.15);
 
     float bub = bubbles(fract(surfacePosition + 0.03 * time), time);
-    vividColor = mix(vividColor, vividColor + vec3(1.0, 1.0, 1.0), bub * 0.5);
+    vividColor = mix(vividColor, vividColor + vec3(0.1, 0.1, 0.1), bub * 0.5);
 
-    float caustic = caustics(surfacePosition, time * 0.5);
-    vividColor += vec3(1.1, 1.15, 1.2) * caustic * 0.23;
+    float caustic = caustics(surfacePosition, time * 0.1);
+    vividColor += vec3(0.1, 0.15, 1.2) * caustic * 0.23;
 
     float b = bloom(surfacePosition, 7.0);
-    vividColor += vec3(1.2, 1.25, 1.35) * b * 0.4;
+    vividColor += vec3(0.2, 0.25, 0.35) * b * 0.2;
 
     vividColor += vividColor * 1.32 + 0.10;
 
@@ -212,13 +226,15 @@ void main(void) {
 
     // --- Text Overlay ---
     float aspect = resolution.x / resolution.y;
-    float size = 0.065;
-    float yPos = 0.03;
-    float xPos = 0.5 - (0.055 * aspect * 4.5);
+    float size = 0.1;
+    float yPos = 0.1;
+    float xPos = 0.1 - (0.055 * aspect * 4.5);
 
     float textAlpha = renderText(surfacePosition, vec2(xPos, yPos), size, aspect);
 
-    vividColor = mix(vividColor, vec3(1.0), textAlpha);
+    vividColor = mix(vividColor, vec3(1.0), 0.001);
 
-    gl_FragColor = vec4(vividColor, 1.0);
+
+	gl_FragColor = vec4( vec3( color, color * pulse1, sin( color + time / pulse2 * vividColor *0.01) * 0.75 ), 1.0 )+vec4(vividColor, 0.6);
+
 }
