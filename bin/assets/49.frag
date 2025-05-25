@@ -1,4 +1,4 @@
-// @mix-author harley
+// @mix-author N3oray
 
 #ifdef GL_ES
 precision mediump float;
@@ -7,6 +7,31 @@ precision mediump float;
 uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;
+
+// Constants
+const float PI = 3.14159265;
+const float TAU = 6.2831853;
+
+
+// Palette selector (0, 1, 2, etc.)
+int paletteType = 1;
+
+// Color palettes
+vec3 palette(float t, int type) {
+    if (type == 0) {
+        // Neon rainbow
+        return vec3(0.5 + 0.5*cos(TAU*t + vec3(0.0,2.0,4.0)));
+    } else if (type == 1) {
+        // Vaporwave
+        return vec3(0.7 + 0.3*cos(TAU*t + vec3(0.0,2.5,5.0)));
+    } else if (type == 2) {
+        // Sunset
+        return vec3(0.8+0.2*cos(TAU*t + vec3(0.0,1.0,2.5)));
+    } else {
+        // Default blue
+        return vec3(0.4 + 0.6*cos(TAU*t + vec3(1.0,2.0,3.0)));
+    }
+}
 
 float rand(vec2 co){
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -19,10 +44,24 @@ float random () {
 
 void main( void ) {
 
+    // Normalized coordinates, aspect-correct
+    vec2 uv = (gl_FragCoord.xy / resolution.xy) - 0.5;
+    uv.x *= resolution.x / resolution.y;
+
 	vec2 pixel_pos = gl_FragCoord.xy;
-	vec3 color1 = vec3(0.7, sin(time), 2.25*sin(time));
-	vec3 color2 = vec3(0.25, 0.7, 0.5*cos(time));
-	vec3 color3 = vec3(0.5*sin(time), 0.25, 0.7);
+    // Color cycling using palette
+    float colorTime = fract(time * 0.075 + uv.x * 0.5 + uv.y * 0.5);
+
+    vec3 color1 = palette(colorTime, 0);
+
+    vec3 color2 = palette(colorTime, 1);
+
+    vec3 color3 = palette(colorTime, 2);
+
+
+	//vec3 color1 = vec3(0.7, sin(time), 2.25*sin(time));
+	//vec3 color2 = vec3(0.25, 0.7, 0.5*cos(time));
+	//vec3 color3 = vec3(0.5*sin(time), 0.25, 0.7);
 	
 	vec3 final_color = vec3(0.05*cos(time), 0.025*cos(time*0.5), 0.05*sin(time));
 	for (int i = 0; i < 9; ++i) {
