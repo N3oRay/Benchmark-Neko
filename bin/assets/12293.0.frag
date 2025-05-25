@@ -19,11 +19,17 @@ float sdBox(vec3 p, vec3 b) {
     vec3 d = abs(p) - b;
     return min(max(d.x, max(d.y, d.z)), 0.0) + length(max(d, 0.0));
 }
-float sdCone(vec3 p, vec2 c) {
-    float q = length(p.xz);
-    return dot(c, vec2(q, p.y));
-}
 float sdSphere(vec3 p, float r) { return length(p) - r; }
+float sdEllipsoid(vec3 p, vec3 r) {
+    float k0 = length(p/r);
+    float k1 = length(p/(r*r));
+    return k0*(k0-1.0)/k1;
+}
+float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
+    vec3 pa = p - a, ba = b - a;
+    float h = clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);
+    return length(pa - ba*h) - r;
+}
 
 vec3 rotateX(vec3 p, float a) {
     float sa = sin(a), ca = cos(a);
@@ -34,25 +40,58 @@ vec3 rotateY(vec3 p, float a) {
     return vec3(ca*p.x + sa*p.z, p.y, -sa*p.x + ca*p.z);
 }
 
-// ----- Scene SDF -----
-float scene(vec3 p) {	
-    float d = sdSphere(p, sin(time)*0.5 + 0.5);
+// ----- Scene SDF with Human Face -----
+float faceSDF(vec3 p) {
+    // Head (ellipsoid for cuteness)
+    float head = sdEllipsoid(p, vec3(0.6, 0.75, 0.6));
 
-    vec3 pr = p - vec3(1.5, 0.0, 0.0);
-    pr = rotateX(pr, time);
-    pr = rotateY(pr, time*0.3);	
-    d = opUnion(d, sdBox(pr, vec3(0.6)));
+    // Cheeks (slightly offset spheres)
+    float cheekL = sdSphere(p - vec3(-0.33, -0.18, 0.32), 0.17);
+    float cheekR = sdSphere(p - vec3( 0.33, -0.18, 0.32), 0.17);
 
-    d = opUnion(d, sdCone(p + vec3(1.5, -0.5, 0.0), vec2(1.0, 0.5)));
-    d = opUnion(d, sdPlane(p, vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0)));
+    // Eyes (depressions in head)
+    float eyeL = -sdSphere(p - vec3(-0.23, 0.08, 0.53), 0.09);
+    float eyeR = -sdSphere(p - vec3( 0.23, 0.08, 0.53), 0.09);
 
-    // Cute "bubble" overlays
-    float bubbleTime = time * 0.7;
+    // Nose (tiny bump)
+    float nose = sdSphere(p - vec3(0.0, -0.06, 0.63), 0.06);
+
+    // Mouth (capsule)
+    float m = 0.12 + 0.03*sin(time*1.5);
+    float mouth = sdCapsule(p, vec3(-0.11, -0.22, 0.56), vec3(0.11, -0.22, 0.56), m);
+
+    // Ears (ellipsoids)
+    float earL = sdEllipsoid(p - vec3(-0.46, 0.15, 0.0), vec3(0.11, 0.19, 0.14));
+    float earR = sdEllipsoid(p - vec3( 0.46, 0.15, 0.0), vec3(0.11, 0.19, 0.14));
+
+    // Combine all
+    float face = head;
+    face = opUnion(face, cheekL);
+    face = opUnion(face, cheekR);
+    face = opUnion(face, nose);
+    face = opUnion(face, earL);
+    face = opUnion(face, earR);
+
+    // Carve eyes and mouth
+    face = opUnion(face, eyeL);
+    face = opUnion(face, eyeR);
+    face = opUnion(face, mouth);
+
+    return face;
+}
+
+float scene(vec3 p) {
+    float d = faceSDF(p);
+
+    // Add cute floating bubbles
     for (int i=0; i<3; i++) {
-        float angle = bubbleTime + float(i) * 2.0;
-        vec3 offset = vec3(sin(angle)*2.0, 0.6+0.7*sin(angle*1.2), cos(angle)*1.2);
-        d = opUnion(d, sdSphere(p - offset, 0.35 + 0.13*sin(angle*3.0)));
+        float angle = time * 0.7 + float(i) * 2.1;
+        vec3 offset = vec3(sin(angle)*2.0, 1.2+0.7*sin(angle*1.2), cos(angle)*1.2);
+        d = opUnion(d, sdSphere(p - offset, 0.22 + 0.09*sin(angle*2.7)));
     }
+
+    // Add ground plane
+    d = opUnion(d, sdPlane(p, vec3(0.0, 1.0, 0.0), vec3(0.0, -0.85, 0.0)));
     return d;
 }
 
@@ -81,9 +120,8 @@ float ambientOcclusion(vec3 p, vec3 n) {
     return clamp(1.0 - a, 0.0, 1.0);
 }
 
-// ----- Soft Pastel Palette -----
+// ----- Pastel Palette -----
 vec3 pastelPalette(float t) {
-    // Pink, peach, lavender, mint, sky blue, yellow
     vec3 pastel[6];
     pastel[0] = vec3(1.0, 0.8, 0.9); // pastel pink
     pastel[1] = vec3(1.0, 0.92, 0.8); // peach
@@ -99,39 +137,53 @@ vec3 pastelPalette(float t) {
     return mix(pastel[idx], pastel[idx2], blend);
 }
 
-// ----- Lighting with Cute Color -----
+// ----- Shading -----
 vec3 shade(vec3 pos, vec3 n, vec3 eyePos) {
     const vec3 lightPos = vec3(6.0, 12.0, 6.0);
     const float shininess = 60.0;
 
-    float t = 0.22 * time + 0.13 * pos.x + 0.12 * pos.y + 0.19 * pos.z;
+    // Pastel face, pinkish for skin, blue for eyes, red for mouth, etc.
+    float t = 0.19 * time + 0.14 * pos.x + 0.13 * pos.y + 0.16 * pos.z;
     vec3 baseColor = pastelPalette(t);
+
+    // Feature coloring
+    // Eyes
+    if (length(pos - vec3(-0.23, 0.08, 0.53)) < 0.09+0.01 || length(pos - vec3(0.23, 0.08, 0.53)) < 0.09+0.01)
+        baseColor = mix(vec3(0.25,0.35,0.55), baseColor, 0.2);
+    // Nose
+    if (length(pos - vec3(0.0, -0.06, 0.63)) < 0.06+0.01)
+        baseColor = mix(vec3(1.0,0.8,0.7), baseColor, 0.6);
+    // Mouth
+    if (abs(pos.y+0.22) < 0.03 && abs(pos.z-0.56)<0.03 && abs(pos.x)<0.12)
+        baseColor = mix(vec3(1.0,0.45,0.6), baseColor, 0.5);
+    // Cheeks
+    if (length(pos - vec3(-0.33, -0.18, 0.32)) < 0.17+0.01 || length(pos - vec3(0.33, -0.18, 0.32)) < 0.17+0.01)
+        baseColor = mix(vec3(1.0,0.7,0.8), baseColor, 0.4);
 
     vec3 l = normalize(lightPos - pos);
     vec3 v = normalize(eyePos - pos);
     vec3 h = normalize(v + l);
-    float diff = 0.55 + 0.45 * dot(n, l);
-    float spec = pow(max(dot(n, h), 0.0), shininess) * 0.6;
+    float diff = 0.65 + 0.35 * dot(n, l);
+    float spec = pow(max(dot(n, h), 0.0), shininess) * 0.7;
     float ao = ambientOcclusion(pos, n);
 
-    // Add a soft highlight for cuteness ("kawaii sparkle")
-    float sparkle = pow(max(dot(reflect(-l, n), v), 0.0), 16.0) * 1.5;
+    // Add a soft highlight for cuteness
+    float sparkle = pow(max(dot(reflect(-l, n), v), 0.0), 16.0) * 1.3;
 
     // Subtle iridescence
-    vec3 iridescent = 0.25 * (0.5 + 0.5 * cos(6.28318 * (vec3(0.75, 0.33, 0.12) + t)));
+    vec3 iridescent = 0.21 * (0.5 + 0.5 * cos(6.28318 * (vec3(0.85, 0.31, 0.22) + t)));
 
-    // Combine all
-    return baseColor * diff * ao + vec3(spec) + sparkle + iridescent * 0.45;
+    return baseColor * diff * ao + vec3(spec) + sparkle + iridescent * 0.41;
 }
 
 // ----- Voxel Traversal -----
-const vec3 voxelSize = vec3(0.1);
+const vec3 voxelSize = vec3(0.07);
 
 vec3 worldToVoxel(vec3 p) { return floor(p / voxelSize); }
 vec3 voxelToWorld(vec3 v) { return v * voxelSize; }
 
 vec3 voxelTrace(vec3 ro, vec3 rd, out bool hit, out vec3 hitNormal) {
-    const int maxSteps = 64;
+    const int maxSteps = 88;
     const float isoValue = 0.0;
 
     vec3 voxel = worldToVoxel(ro);
@@ -158,24 +210,21 @@ vec3 voxelTrace(vec3 ro, vec3 rd, out bool hit, out vec3 hitNormal) {
 
 // ----- Kawaii Gradient Background -----
 vec3 kawaiiBackground(vec3 rd) {
-    // Rainbow pastel sunburst
     float angle = atan(rd.x, rd.z) / 6.28318 + 0.5;
     float t = mod(time * 0.08 + angle + 0.5 * rd.y, 1.0);
     vec3 pastel = pastelPalette(t);
-    // Add a soft vignette
-    float vignette = smoothstep(1.0, 0.6, abs(rd.y));
-    return mix(pastel, vec3(1.0,1.0,1.0), 0.25) * vignette + 0.05;
+    float vignette = smoothstep(1.0, 0.66, abs(rd.y));
+    return mix(pastel, vec3(1.0,1.0,1.0), 0.17) * vignette + 0.07;
 }
 
 // ----- Lovely Reflection -----
 vec3 lovelyReflection(vec3 ro, vec3 rd, float time, out bool hit, out vec3 n) {
     vec3 pos = voxelTrace(ro, rd, hit, n);
     if(hit) {
-        float t = 0.26 * time + 0.23 * pos.x + 0.18 * pos.y + 0.15 * pos.z;
-        vec3 reflectColor = pastelPalette(t + 0.25 * sin(time + pos.x + pos.y));
-        // Add sparkly overlay
-        reflectColor += 0.3 * abs(sin(12.0 * (pos.x + pos.y + time)));
-        reflectColor = mix(reflectColor, vec3(1.0), 0.15); // soft highlight
+        float t = 0.19 * time + 0.18 * pos.x + 0.12 * pos.y + 0.12 * pos.z;
+        vec3 reflectColor = pastelPalette(t + 0.22 * sin(time + pos.x + pos.y));
+        reflectColor += 0.2 * abs(sin(10.0 * (pos.x + pos.y + time)));
+        reflectColor = mix(reflectColor, vec3(1.0), 0.11);
         return reflectColor;
     } else {
         return kawaiiBackground(rd);
@@ -187,11 +236,11 @@ void main(void) {
     vec2 pixel = -1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
     float aspect = resolution.x / resolution.y;
     vec3 rd = normalize(vec3(aspect * pixel.x, pixel.y, -2.0));
-    vec3 ro = vec3(0.0, 0.25, 4.5) + rd * 2.0;
+    vec3 ro = vec3(0.0, 0.15, 3.2) + rd * 1.4;
 
     // Camera controls (mouse-driven)
     float angleX = -(1.0 - mouse.y) * 1.5;
-    float angleY = -(mouse.x - 0.5) * 3.0;
+    float angleY = -(mouse.x - 0.5) * 2.0;
     rd = rotateX(rd, angleX); ro = rotateX(ro, angleX);
     rd = rotateY(rd, angleY); ro = rotateY(ro, angleY);
 
@@ -203,10 +252,10 @@ void main(void) {
     if (hit) {
         color = shade(pos, n, ro);
 
-        // Beautiful, pastel reflection
+        // Pastel reflection
         vec3 v = normalize(ro - pos);
-        float fresnel = 0.12 + 0.35 * pow(1.0 - dot(n, v), 5.0);
-        ro = pos + n * 0.01;
+        float fresnel = 0.12 + 0.26 * pow(1.0 - dot(n, v), 5.0);
+        ro = pos + n * 0.009;
         rd = reflect(-v, n);
 
         bool refHit;
@@ -217,9 +266,9 @@ void main(void) {
         color = kawaiiBackground(rd);
     }
 
-    // Subtle bloom around edges for cuteness
-    float vignette = smoothstep(0.85, 0.3, length(pixel));
-    color = mix(color, vec3(1.0), 0.12 * vignette);
+    // Subtle bloom around edges for even more cuteness
+    float vignette = smoothstep(0.82, 0.22, length(pixel));
+    color = mix(color, vec3(1.0), 0.11 * vignette);
 
     gl_FragColor = vec4(color, 1.0);
 }
