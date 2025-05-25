@@ -1,3 +1,5 @@
+// Original by @N3oray, reworked for clarity & structure
+
 #ifdef GL_ES
 precision mediump float;
 #endif
