@@ -86,7 +86,7 @@ void main() {
     vec3 ray = camPos;
     int marchStep = 0;
     float dist = 0.0, totalDist = 0.0;
-    const int MAX_MARCH = 96;
+    const int MAX_MARCH = 128;
 
     // Raymarching loop
     for (int i = 0; i < MAX_MARCH; ++i) {
