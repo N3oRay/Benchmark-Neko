@@ -4,7 +4,7 @@
  */
 
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 // glslsandbox uniforms
@@ -30,7 +30,7 @@ uniform vec2 resolution;
 #define TWOPI 6.28318530718
 #define PHASELENGTH 30.0
 #define PHASE mod(iTime/PHASELENGTH,1.0)
-#define CUBENUM 50.0
+#define CUBENUM 100.0
 #define DISTANCEPERPHASE 150.0
 
 
