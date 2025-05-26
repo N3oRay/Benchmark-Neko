@@ -11,6 +11,10 @@ precision highp float;
 uniform float time;
 uniform vec2 resolution;
 
+// Matrix
+uniform mat4 u_modelViewMatrix;
+uniform mat4 u_projectionMatrix;
+
 #define iTime time
 #define iResolution resolution
 
@@ -36,25 +40,26 @@ vec3 lastglow = vec3(0);
 vec3 cubeColor = vec3(0);
 float ringOffset = +0.6;
 
+// --- Matrix helpers ---
 mat4 rotationX( in float angle ) {
-	return mat4(1.0, 0, 0, 0,
-	            0, cos(angle), -sin(angle), 0,
-	            0, sin(angle),  cos(angle), 0,
-	            0, 0, 0, 1);
+    return mat4(1.0, 0, 0, 0,
+                0, cos(angle), -sin(angle), 0,
+                0, sin(angle),  cos(angle), 0,
+                0, 0, 0, 1);
 }
 
 mat4 rotationY( in float angle ) {
-	return mat4(cos(angle), 0, sin(angle), 0,
-	            0, 1.0, 0, 0,
-	            -sin(angle), 0, cos(angle), 0,
-	            0, 0, 0, 1);
+    return mat4(cos(angle), 0, sin(angle), 0,
+                0, 1.0, 0, 0,
+                -sin(angle), 0, cos(angle), 0,
+                0, 0, 0, 1);
 }
 
 mat4 rotationZ( in float angle ) {
-	return mat4(cos(angle), -sin(angle), 0, 0,
-	            sin(angle),  cos(angle), 0, 0,
-	            0, 0, 1, 0,
-	            0, 0, 0, 1);
+    return mat4(cos(angle), -sin(angle), 0, 0,
+                sin(angle),  cos(angle), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
 }
 
 vec3 displacement(float p) {
@@ -128,7 +133,7 @@ float map(vec3 pos) {
     return min(d0,d1);
 }
 
-// New: estimate normal using central difference
+// Estimate normal using central difference
 vec3 estimateNormal(vec3 p) {
     float e = EPSILON * 2.0;
     return normalize(vec3(
@@ -138,7 +143,7 @@ vec3 estimateNormal(vec3 p) {
     ));
 }
 
-// New: lighting with diffuse and specular
+// Lighting: diffuse and specular
 vec3 applyLighting(vec3 p, vec3 normal, vec3 viewDir, vec3 baseColor) {
     vec3 lightPos = vec3(3.0, 2.0, -3.0);
     vec3 lightColor = vec3(1.0, 0.95, 0.9);
@@ -149,7 +154,7 @@ vec3 applyLighting(vec3 p, vec3 normal, vec3 viewDir, vec3 baseColor) {
     return baseColor * diff + lightColor * 0.4 * spec;
 }
 
-// Modified: Output hit position and normal for lighting
+// Raymarch and return intersection, normal, and distance
 void intersect(
     vec3 ro, vec3 rd,
     out float marchDist,
@@ -176,6 +181,7 @@ void intersect(
     marchDist = d;
 }
 
+// Main raymarch image
 void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     vec2 uv = (fragCoord.xy - iResolution.xy * 0.5)/ iResolution.xy;
     uv.x *= iResolution.x / iResolution.y;
@@ -191,6 +197,16 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     vec3 up = cross(right, forward);
     vec3 dir = normalize(uv.x * right + uv.y * up + fov * forward);
 
+    // Apply camera transform using modelViewMatrix (if you wish)
+    // If you want to use your matrix:
+/*
+    origin = (u_modelViewMatrix * vec4(origin, 1.0)).xyz;
+    dir = mat3(
+    u_modelViewMatrix[0].xyz,
+    u_modelViewMatrix[1].xyz,
+    u_modelViewMatrix[2].xyz
+) * dir;
+*/
     float marchDist;
     bool hit;
     vec3 hitPos, normal;
@@ -200,7 +216,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     vec3 sceneColor = glow;
 
     if(hit) {
-        vec3 baseColor = glow; // you can use cubeColor for more color
+        vec3 baseColor = glow; // Could also use cubeColor for more dynamic color
         sceneColor = applyLighting(hitPos, normal, -dir, baseColor);
     }
 
@@ -208,8 +224,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     fragColor = vec4(finalColor, 1.0);
 }
 
-// Stylized overlay (original effect)
 void main(void) {
+    // Raymarch effect
+    mainImage(gl_FragColor, gl_FragCoord.xy);
+
+    // Optional: stylized overlay (comment out if not needed)
+    /* 
     vec2 pos = vec2(gl_FragCoord.xy - 0.5 * resolution.xy) / resolution.y;
     pos.x += sin(time+pos.y)*.023;
     pos.y += cos(time+pos.x)*.037;
@@ -225,6 +245,5 @@ void main(void) {
 
     sick *= .3;
     gl_FragColor += vec4(g,g+sick,0.0,1.0);    // colorise
-
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+    */
 }
