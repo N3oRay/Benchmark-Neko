@@ -24,16 +24,20 @@ uniform vec2 resolution;
 // --------[ Original ShaderToy begins here ]---------- //
 //quick and dirty code for prototyping
 
-#define MAXSTEPS 256
+
 #define MAXDIST 30.0
 #define PI 3.1415926535898
 #define TWOPI 6.28318530718
-#define FUZZ 0.7
 #define PHASELENGTH 30.0
 #define PHASE mod(iTime/PHASELENGTH,1.0)
 #define CUBENUM 50.0
 #define DISTANCEPERPHASE 150.0
-#define EPSILON 0.005
+
+
+// Update for higher precision
+#define MAXSTEPS 512
+#define EPSILON 0.001
+#define FUZZ 0.5
 
 vec3 glow = vec3(0);
 vec3 lastglow = vec3(0);
@@ -179,27 +183,52 @@ void intersect(vec3 ro, vec3 rd)
     glow += lastglow*6.0;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+// Move your previous mainImage code to mainImageInternal (internal helper)
+void mainImageInternal(vec2 uv)
+{
+    float fov = 0.22 * PI;
+    vec3 origin = vec3(0,0, PHASE*DISTANCEPERPHASE);
+    vec3 target = origin -vec3(0.0, 0.001, -0.05);
+    target += displacement(target.z*1.0);
+    origin += displacement(origin.z*1.0);
+
+    vec3 forward = normalize(target - origin);
+    vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));   
+    vec3 up = cross(right, forward);
+    vec3 dir = normalize(uv.x * right + uv.y * up + fov * forward);
+
+    intersect(origin, dir);
+}
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
     vec2 uv = (fragCoord.xy - iResolution.xy * 0.5)/ iResolution.xy;
     uv.x *= iResolution.x / iResolution.y;
 
-    float fov = 0.22 * PI;
-    vec3 origin = vec3(0,0, PHASE*DISTANCEPERPHASE);
-    vec3 target = origin -vec3(0.0, 0.001, -0.05);
-    
-    target += displacement(target.z*1.0);
-    origin += displacement(origin.z*1.0);
+    // Chromatic aberration offsets
+    float aberration = 0.003;
+    vec3 color = vec3(0.0);
 
-	vec3 forward = normalize(target - origin);
- 	vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));   
-    vec3 up = cross(right, forward);
-    vec3 dir = normalize(uv.x * right + uv.y * up + fov * forward);
-    
-    intersect(origin, dir);
-	fragColor = vec4(glow, 5.0);
+    // March for Red channel (offset left)
+    glow = vec3(0);
+    mainImageInternal(uv - aberration * vec2(1.0, 0.0));
+    color.r = glow.r;
+
+    // March for Green channel (center)
+    glow = vec3(0);
+    mainImageInternal(uv);
+    color.g = glow.g;
+
+    // March for Blue channel (offset right)
+    glow = vec3(0);
+    mainImageInternal(uv + aberration * vec2(1.0, 0.0));
+    color.b = glow.b;
+
+    fragColor = vec4(color, 1.0);
 }
 // --------[ Original ShaderToy ends here ]---------- //
+
+
 
 void main(void)
 {
