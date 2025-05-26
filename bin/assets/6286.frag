@@ -91,26 +91,48 @@ mat3 genRotMat(float a0,float x,float y,float z){
 
 
 
-float sdBox( vec3 p, vec3 b )
-{    
-	float interval = DISTANCEPERPHASE/CUBENUM;
-  	vec3 offset = displacement(round(p.z / interval +0.5)*interval - ringOffset);
-  	p -= offset;
-    
-    float num = mod(floor(p.z/interval)+1.0,DISTANCEPERPHASE/interval)*4.0;
-    cubeColor = normalize(texture(iChannel0, vec2((num+0.5)/256.0,0.2/256.0)).xyz);
-  	p.z = mod(p.z,interval) - interval*0.5;
-    p = mat3(rotationX(PHASE*TWOPI*5.0) * rotationZ(PHASE*TWOPI*18.0))*p; // A modifier
-    //p = genRotMat(sin(time/46.13)*360.0,1.0,0.0,0.0) * rotationZ(PHASE*TWOPI*18.0))*p;
-    
-  	vec3 d = abs(p) - b;
-  	float res = length(max(d,0.0)) + min(max(d.x,max(d.y,d.z)),0.0);
+// Signed distance function for a box with displacement, color, and glow effects.
+float sdBox(vec3 p, vec3 b) {    
+    // Calculate interval size based on constants
+    float interval = DISTANCEPERPHASE / CUBENUM;
 
-    lastglow = pow(max(0.0,(1.0-(res/2.0))),4.0) * cubeColor * 0.09;
+    // Apply displacement offset to the position
+    float zPhase = round(p.z / interval + 0.5) * interval - ringOffset;
+    vec3 offset = displacement(zPhase);
+    p -= offset;
+    
+    // Determine cube phase and fetch corresponding color
+    float num = mod(floor(p.z / interval) + 1.0, DISTANCEPERPHASE / interval) * 4.0;
+    cubeColor = normalize(texture(iChannel0, vec2((num + 0.5) / 256.0, 0.2 / 256.0)).xyz);
+
+    // Wrap Z within interval and center
+    p.z = mod(p.z, interval) - interval * 0.5;
+
+    // Apply rotation matrix for dynamic effects
+    // Then
+    float angle1 = PHASE*TWOPI*5.0;
+    float angle2 = PHASE*TWOPI*18.0;
+
+    mat3 rotationX3 = genRotMat(1.0, 0.1, 0.1, angle1);
+ 
+    mat3 rotationZ3 = genRotMat(angle2, -angle2, 0.1, angle2);
+
+
+
+    mat3 rot = rotationX3 * rotationZ3;
+    p = rot * p;
+
+    // Compute signed distance to box
+    vec3 d = abs(p) - b;
+    float res = length(max(d, 0.0)) + min(max(d.x, max(d.y, d.z)), 0.0);
+
+    // Calculate glow effect
+    lastglow = pow(max(0.0, (1.0 - (res / 2.0))), 4.0) * cubeColor * 0.09;
     glow += lastglow;
     
     return res;
 }
+
 float sdTube(vec3 p, float r)
 {
     p.y += 0.8;
