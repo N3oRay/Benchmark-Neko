@@ -22,6 +22,7 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />	
 
+
 	<assets path="bin/assets" rename="assets" />
 
     <library name="preloader" id="preloader" embed="true" />
@@ -31,12 +32,21 @@
 
 
 //stage.window.frameRate = 30;
-<window width="800" height="600" background="#FFFFFF" fps="200" />
-<window hardware="true" allow-shaders="true" require-shaders="true" depth-buffer="false" stencil-buffer="false" />
-<window fullscreen="false" resizable="true" borderless="false" vsync="false" />
-<window orientation="portrait" />
 
 
+    <window fullscreen="false" resizable="true" borderless="false" vsync="false" />
+
+  <!-- Target platforms -->
+    <window width="800" height="600" unless="mobile" fps="200" />
+    <window orientation="landscape" if="mobile" />
+    <window background="#000000" hardware="true" depth-buffer="true" stencil-buffer="false" />
+
+    <!-- Request OpenGL core profile for newer GLSL support -->
+    <haxedef name="lime_opengl_profile" value="core" />
+
+  <!-- OpenFL and Lime dependencies -->
+    <dependency name="openfl" />
+    <dependency name="lime" />
 
 	
 </project>

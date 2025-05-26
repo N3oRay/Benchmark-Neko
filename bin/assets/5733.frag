@@ -38,7 +38,8 @@ uniform vec2 resolution;
 
 const vec3 std_gamma   = vec3(2.2, 2.2, 2.2);
 const vec3 planeCol    = vec3(1.0, 1.2, 1.5);
-const vec3 baseRingCol = pow(vec3(1.0, 0.65, 0.25), vec3(0.6));
+//const vec3 baseRingCol = pow(vec3(1.0, 0.65, 0.25), vec3(0.6));
+const vec3 baseRingCol = vec3(1.0, 0.65, 0.25);
 const vec3 sunCol      = vec3(1.25, 1.0, 1.1)/1.25;
 
 struct effect {
@@ -120,7 +121,10 @@ float circle(vec2 p, float r) {
 }
 
 float hex(vec2 p, float r) {
-  const vec3 k = vec3(-sqrt(3.0)/2.0,1.0/2.0,sqrt(3.0)/3.0);
+  float a =  -sqrt(3.0)/2.0;
+  float b =   1.0/2.0;
+  float c =   sqrt(3.0)/3.0;
+  vec3 k = vec3(a,b,c);
   p = p.yx;
   p = abs(p);
   p -= 2.0*min(dot(k.xy,p),0.0)*k.xy;
