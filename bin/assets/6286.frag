@@ -1,4 +1,5 @@
 /*
+ * @mix-author N3oray
  * Original shader from: https://www.shadertoy.com/view/wl2SRK
  */
 
@@ -72,21 +73,16 @@ float opSmoothUnion( float d1, float d2, float k ) {
     return mix( d2, d1, h ) - k*h*(1.0-h); }
 
 
-mat3 genRotMat(float a0,float x,float y,float z){
-  float a=a0*3.1415926535897932384626433832795/180.0;
-  float c=1.0-cos(a);
-  float s=sin(a);
-  return mat3(
-    1.0+c*(x*x-1.0),
-    -z*s+c*x*y,
-    y*s+c*x*z,
-    z*s+c*x*y,
-    1.0+c*(y*y-1.0),
-    -x*s+c*y*z,
-    -y*s+c*x*z,
-    x*s+c*y*z,
-    1.0+c*(z*z-1.0)
-  );
+mat3 genRotMat(float a0, float x, float y, float z) {
+    float a = a0 * 3.1415926535897932384626433832795 / 180.0;
+    float c = cos(a);
+    float s = sin(a);
+    float t = 1.0 - c;
+    return mat3(
+        t*x*x + c,     t*x*y - s*z,   t*x*z + s*y,
+        t*x*y + s*z,   t*y*y + c,     t*y*z - s*x,
+        t*x*z - s*y,   t*y*z + s*x,   t*z*z + c
+    );
 }
 
 
