@@ -42,33 +42,33 @@ https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
 ## Install OpenFL
 
-$ haxelib install openfl
-$ haxelib run openfl setup
+    $sudo haxelib install openfl
+
+    $sudo haxelib run openfl setup
     
 #### Install Actuate
 
-$ haxelib install actuate
+    $sudo haxelib install actuate
     
 #### Install Lime
 
-$ haxelib install lime
-
+    $sudo haxelib install lime
 
 ## Build&RUN android
 
-sudo openfl build android
+    $sudo openfl build android
 
 ## Build&RUN for HTML5
 
-sudo openfl build html5
+    $sudo openfl build html5
 
 ## Build&RUN for Linux
 
-sudo openfl build linux
+    $sudo openfl build linux
 
 ## Build&RUN for Windows
 
-sudo openfl build neko
+    $sudo openfl build neko
 
 ## Run compile with lime
 
@@ -83,8 +83,8 @@ To compile and launch a Linux executable with one command, run lime test linux.
 
 ## Clone repository and submodules
 
-git clone https://github.com/N3oRay/Benchmark-Neko.git
-cd Benchmark-Neko
+    $git clone https://github.com/N3oRay/Benchmark-Neko.git
+    $cd Benchmark-Neko
 
 
 ## Info
