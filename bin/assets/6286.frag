@@ -72,6 +72,25 @@ float opSmoothUnion( float d1, float d2, float k ) {
     return mix( d2, d1, h ) - k*h*(1.0-h); }
 
 
+mat3 genRotMat(float a0,float x,float y,float z){
+  float a=a0*3.1415926535897932384626433832795/180.0;
+  float c=1.0-cos(a);
+  float s=sin(a);
+  return mat3(
+    1.0+c*(x*x-1.0),
+    -z*s+c*x*y,
+    y*s+c*x*z,
+    z*s+c*x*y,
+    1.0+c*(y*y-1.0),
+    -x*s+c*y*z,
+    -y*s+c*x*z,
+    x*s+c*y*z,
+    1.0+c*(z*z-1.0)
+  );
+}
+
+
+
 float sdBox( vec3 p, vec3 b )
 {    
 	float interval = DISTANCEPERPHASE/CUBENUM;
@@ -81,7 +100,8 @@ float sdBox( vec3 p, vec3 b )
     float num = mod(floor(p.z/interval)+1.0,DISTANCEPERPHASE/interval)*4.0;
     cubeColor = normalize(texture(iChannel0, vec2((num+0.5)/256.0,0.2/256.0)).xyz);
   	p.z = mod(p.z,interval) - interval*0.5;
-    p = mat3(rotationX(PHASE*TWOPI*5.0) * rotationZ(PHASE*TWOPI*18.0))*p;
+    p = mat3(rotationX(PHASE*TWOPI*5.0) * rotationZ(PHASE*TWOPI*18.0))*p; // A modifier
+    //p = genRotMat(sin(time/46.13)*360.0,1.0,0.0,0.0) * rotationZ(PHASE*TWOPI*18.0))*p;
     
   	vec3 d = abs(p) - b;
   	float res = length(max(d,0.0)) + min(max(d.x,max(d.y,d.z)),0.0);
