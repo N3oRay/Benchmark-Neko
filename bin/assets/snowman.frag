@@ -1,28 +1,58 @@
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 uniform vec2 resolution;
 uniform float time;
 
-// --- SDF Primitives ---
-float sdSphere(vec3 p, float r) {
-    return length(p)-r;
+// --- Constants ---
+#define ITERATIONS 15.0
+#define LAYERS 8.0
+#define LAYERS_BLOB 200
+#define FAR 100000.0
+#define STEP 1.0
+#define DEPTH 0.1255
+#define SNOW_RADIUS 0.55
+#define ZOOM_INIT 4.0
+
+// --- Utility Math ---
+vec4 NC0 = vec4(0.0,157.0,113.0,270.0);
+vec4 NC1 = vec4(1.0,158.0,114.0,271.0);
+
+lowp vec4 hash4(mediump vec4 n) { return fract(sin(n)*1399763.5453123); }
+
+lowp float noise2(mediump vec2 x) {
+    vec2 p = floor(x);
+    lowp vec2 f = fract(x);
+    f = f*f*(3.0-2.0*f);
+    float n = p.x + p.y*157.0;
+    lowp vec4 h = hash4(vec4(n)+vec4(NC0.xy,NC1.xy));
+    lowp vec2 s1 = mix(h.xy,h.zw,f.xx);
+    return mix(s1.x,s1.y,f.y);
 }
+
+lowp float noise3(mediump vec3 x) {
+    mediump vec3 p = floor(x);
+    lowp vec3 f = fract(x);
+    f = f*f*(3.0-2.0*f);
+    mediump float n = p.x + dot(p.yz,vec2(157.0,113.0));
+    lowp vec4 s1 = mix(hash4(vec4(n)+NC0),hash4(vec4(n)+NC1),f.xxxx);
+    return mix(mix(s1.x,s1.y,f.y),mix(s1.z,s1.w,f.y),f.z);
+}
+
+// --- SDF Primitives ---
+float sdSphere(vec3 p, float r) { return length(p)-r; }
 float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
     vec3 pa = p-a, ba = b-a;
     float h = clamp(dot(pa,ba)/dot(ba,ba),0.0,1.0);
     return length(pa-ba*h)-r;
 }
-float sdPlane(vec3 p, vec3 n, float h) {
-    return dot(p,n)+h;
-}
+float sdPlane(vec3 p, vec3 n, float h) { return dot(p,n)+h; }
 float sdBox(vec3 p, vec3 b) {
     vec3 d = abs(p) - b;
     return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
 }
 float sdCone(vec3 p, float h, float r1, float r2) {
-    // https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm
     float q = length(p.xz);
     float k1 = h*r2/(r2-r1), k2 = -h*r1/(r2-r1);
     float ca = atan(r2-r1,h);
@@ -30,7 +60,7 @@ float sdCone(vec3 p, float h, float r1, float r2) {
     return d;
 }
 
-// --- Snowman SDF ---
+// --- Scene SDFs ---
 float snowman(vec3 p, out int matID) {
     float b = sdSphere(p-vec3(0.0,0.23,0.0),0.23);
     float m = sdSphere(p-vec3(0.0,0.45,0.0),0.16);
@@ -74,7 +104,6 @@ float snowman(vec3 p, out int matID) {
     return d;
 }
 
-// --- Pine Tree SDF ---
 float pineTree(vec3 p, out int matID) {
     // Tree position
     vec3 treePos = vec3(-0.8, 0.0, 0.7);
@@ -98,28 +127,18 @@ float pineTree(vec3 p, out int matID) {
     return t;
 }
 
-// --- Scene SDF ---
+
 float map(vec3 p, out int matID) {
     float d = 1e5;
     int id = 0;
     float sm = snowman(p, id);
     d = sm;
     matID = id;
-
-    // Tree
     int tid = 0;
     float td = pineTree(p, tid);
-    if(td < d) {
-        d = td;
-        matID = tid;
-    }
-
-    // ground plane
+    if(td < d) { d = td; matID = tid; }
     float plane = sdPlane(p, vec3(0,1,0), 0.0);
-    if(plane < d) {
-        d = plane;
-        matID = 5;
-    }
+    if(plane < d) { d = plane; matID = 5; }
     return d;
 }
 
@@ -128,15 +147,15 @@ vec3 getNormal(vec3 p) {
     int dummy;
     float eps = 0.001;
     vec2 e = vec2(1.0,-1.0)*0.5773;
-    return normalize(e.xyy*map(p+e.xyy*eps,dummy) +
-                     e.yyx*map(p+e.yyx*eps,dummy) +
-                     e.yxy*map(p+e.yxy*eps,dummy) +
-                     e.xxx*map(p+e.xxx*eps,dummy));
+    return normalize(
+      e.xyy*map(p+e.xyy*eps,dummy) +
+      e.yyx*map(p+e.yyx*eps,dummy) +
+      e.yxy*map(p+e.yxy*eps,dummy) +
+      e.xxx*map(p+e.xxx*eps,dummy)
+    );
 }
 float softshadow(vec3 ro, vec3 rd, float mint, float tmax, float k) {
-    float res = 1.0;
-    float t = mint;
-    int dummy;
+    float res = 1.0, t = mint; int dummy;
     for(int i = 0; i < 32; i++) {
         float h = map(ro + rd*t, dummy);
         res = min(res, k*h/t);
@@ -146,10 +165,8 @@ float softshadow(vec3 ro, vec3 rd, float mint, float tmax, float k) {
     return clamp(res,0.0,1.0);
 }
 
-// --- Falling Snow ---
-float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(41.0, 289.0))) * 45758.5453);
-}
+// --- Snowfall ---
+float hash(vec2 p) { return fract(sin(dot(p, vec2(41.0, 289.0))) * 45758.5453); }
 float noise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
@@ -160,34 +177,14 @@ float noise(vec2 p) {
     vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
-float snowParticle(vec3 p, float t, float size) {
-    float snow = 1e5;
-    for(int i=0; i<32; i++) {
-        float fi = float(i);
-        vec3 cell = vec3(mod(fi,8.0)-4.0, 0.0, floor(fi/8.0)-2.0);
-        vec3 pos = cell * 0.7;
-        float y = mod(p.y + 1.0 + t*0.7 + noise(cell.xy + time)*0.9, 3.0) - 1.0;
-        pos.y = y;
-        snow = min(snow, length(p - pos) - size);
-    }
-    return snow;
-}
-
-#define SIN(t) (0.5 + 0.5 * sin(t))
-
-// --- FALLING SNOW ---
 float snowflake(vec2 uv, float t, float flakeSize) {
-    // uv: world coordinates in [-1,1]
-    // t: time, flakeSize: radius
-    // Grid of flakes
-    float snow = 0.0;
-    float speed = 0.25 + 0.25 * noise(uv * 6.0);
+    float snow = 0.0, speed;
     for(int i=0; i < 60; i++) {
         float fi = float(i);
         vec2 cell = vec2(mod(fi,10.0)-5.0, floor(fi/10.0)-3.0);
         vec2 pos = cell / 4.0;
-        // Flicker and drift
-        float drift = 0.25 * SIN(time*0.4 + fi*1.2);
+        speed = 0.25 + 0.25 * noise(uv * 6.0);
+        float drift = 0.25 * (0.5 + 0.5 * sin(time*0.4 + fi*1.2));
         float fall = mod(uv.y + 1.0 + t*speed + noise(cell+time)*0.2, 2.0) - 1.0 + drift;
         vec2 flakePos = vec2(pos.x + drift*0.15, pos.y - fall);
         float flake = smoothstep(flakeSize, 0.0, length(uv - flakePos));
@@ -196,6 +193,7 @@ float snowflake(vec2 uv, float t, float flakeSize) {
     return clamp(snow, 0.0, 1.0);
 }
 
+// --- Main ---
 void main() {
     vec2 uv = (gl_FragCoord.xy / resolution.xy) * 2.0 - 1.0;
     uv.x *= resolution.x / resolution.y;
@@ -227,6 +225,7 @@ void main() {
     // Background
     vec3 col = vec3(0.68, 0.85, 1.0);
 
+    // Shading
     if(hit) {
         // Material colors
         vec3 matCol;
@@ -262,24 +261,28 @@ void main() {
         if(planeY > 0.0 && planeY < maxdist && abs(rd.y) > 0.01) {
             vec3 hitPt = ro + rd * planeY;
             float d = length(hitPt.xz);
-            if(d < 0.45) {
+            if(d < 0.45)
                 col = mix(col, vec3(0.77,0.85,0.95), smoothstep(0.38, 0.44, d));
-            }
         }
     }
 
-    // Add falling snow (two layers)
-    float snow1 = 1.0 - smoothstep(0.0, 0.035, snowParticle(p, time, 0.07));
-    float snow2 = 1.0 - smoothstep(0.0, 0.016, snowParticle(p, time*1.3+14.4, 0.03));
-    float snowVal = clamp(snow1 + 0.7*snow2, 0.1, 1.0);
-    col = mix(col, vec3(1.0), 0.68*snowVal);
-	
-		    // Falling snow: two layers for depth
+    // Falling snow
     float snowLayer1 = snowflake(uv, time * 0.25, 0.03);
     float snowLayer2 = snowflake(uv, time * 0.38 + 13.0, 0.013);
     col = mix(col, vec3(1.0), clamp(snowLayer1 + 0.6 * snowLayer2, 0.0, 1.0));
 
     // Gamma correction
     col = pow(col, vec3(0.4545));
+	
+	    // Gamma correction
+    //col += pow(col, vec3(0.6545));
+    
+    
+       // Normalized pixel coordinates (from 0 to 1)
+    //uv = fragCoord/resolution.xy;
+
+    // Time varying pixel color
+    col += 0.15 + 0.15*cos(time+uv.xyx+vec3(0,1,3));
+	
     gl_FragColor = vec4(col,1.0);
 }
