@@ -24,14 +24,14 @@ uniform vec2 resolution;
 // --------[ Original ShaderToy begins here ]---------- //
 //quick and dirty code for prototyping
 
-#define MAXSTEPS 256
-#define MAXDIST 30.0
+#define MAXSTEPS 512
+#define MAXDIST 130.0
 #define PI 3.1415926535898
 #define TWOPI 6.28318530718
 #define FUZZ 0.7
 #define PHASELENGTH 30.0
 #define PHASE mod(iTime/PHASELENGTH,1.0)
-#define CUBENUM 50.0
+#define CUBENUM 150.0
 #define DISTANCEPERPHASE 150.0
 #define EPSILON 0.005
 
