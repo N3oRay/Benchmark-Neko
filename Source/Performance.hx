@@ -178,8 +178,8 @@ class Performance extends Sprite
         graph.graphics.clear();
         for (i in 0...fpsHistoryLen){
         	graph.graphics.moveTo(graphBarTickness*i+i*graphBarPadding,barHeight);
-        	if (fpsHistory[i] > 100) color = 0xdcffd8; 
-            else if (fpsHistory[i] > 90) color = 0xc3ffbc;
+        	if (fpsHistory[i] > 150) color = 0xdcffd8; 
+            else if (fpsHistory[i] > 100) color = 0xc3ffbc;
             else if (fpsHistory[i] > 70) color = 0x9fe198;
         	else if (fpsHistory[i] > 50) color = 0xefdea2;
         	else if (fpsHistory[i] > 40) color = 0xefbda2;
