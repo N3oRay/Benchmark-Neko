@@ -97,8 +97,54 @@ float kittyStripeR(vec3 p) {
 // --- Sonic SDFs (at x=+0.4) ---
 vec3 sonicPos = vec3(0.4, 0.0, 0.0);
 float sonicHead(vec3 p) { return sdEllipsoid(p-sonicPos, vec3(0.33,0.31,0.29)); }
-float sonicFace(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.05,0.17)),vec3(0.22,0.17,0.14)); }
-float sonicBody(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.49,0.0)), vec3(0.13,0.19,0.11)); }
+//float sonicFace(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.05,0.17)),vec3(0.22,0.17,0.14)); }
+
+float sonicFace(vec3 p) {
+    // Positionne le centre du visage
+    vec3 faceCenter = sonicPos + vec3(0.0, -0.05, 0.17);
+
+    // Ellipsoïde principale (forme de base du visage)
+    float mainFace = sdEllipsoid(p - faceCenter, vec3(0.22, 0.17, 0.14));
+
+    // Ajoute des joues convexes (deux petits ellipsoïdes)
+    float cheekL = sdEllipsoid(p - (faceCenter + vec3(-0.09, -0.03, 0.02)), vec3(0.05, 0.04, 0.03));
+    float cheekR = sdEllipsoid(p - (faceCenter + vec3(0.09, -0.03, 0.02)), vec3(0.05, 0.04, 0.03));
+
+    // Combine les formes de façon convexe (min pour union)
+    float faceWithCheeks = min(mainFace, min(cheekL, cheekR));
+
+    // Optionnel : ajoute le menton avec une capsule ou une petite sphère
+    float chin = sdEllipsoid(p - (faceCenter + vec3(0.0, -0.10, 0.01)), vec3(0.045, 0.025, 0.025));
+    faceWithCheeks = min(faceWithCheeks, chin);
+
+    return faceWithCheeks;
+}
+
+//float sonicBody(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.49,0.0)), vec3(0.13,0.19,0.11)); }
+
+float sonicBody(vec3 p) {
+    // Position de base du corps
+    vec3 bodyCenter = sonicPos + vec3(0.0, -0.49, 0.0);
+
+    // Ellipsoïde principale (tronc)
+    float trunk = sdEllipsoid(p - bodyCenter, vec3(0.13, 0.19, 0.11));
+
+    // Ajout du torse (haut du corps) : plus large vers le haut
+    float upperTorso = sdEllipsoid(p - (bodyCenter + vec3(0.0, 0.10, 0.0)), vec3(0.14, 0.10, 0.10));
+
+    // Ajout du bas du corps (ventre) : plus étroit
+    float lowerAbdomen = sdEllipsoid(p - (bodyCenter + vec3(0.0, -0.12, 0.0)), vec3(0.09, 0.07, 0.10));
+
+    // Optionnel : ajoute une petite boîte pour le bassin/hanches
+    float pelvis = sdBox(p - (bodyCenter + vec3(0.0, -0.19, 0.0)), vec3(0.09, 0.05, 0.10));
+
+    // Combine convexe (union = min)
+    float combinedBody = min(trunk, min(upperTorso, min(lowerAbdomen, pelvis)));
+
+    return combinedBody;
+}
+
+
 float sonicArmL(vec3 p) { vec3 q=p-(sonicPos+vec3(-0.18,-0.43,0.0)); q.yz=mat2(cos(-0.1),-sin(-0.1),sin(-0.5),cos(-0.5))*q.yz; return sdEllipsoid(q,vec3(0.05,0.15,0.05)); }
 float sonicArmR(vec3 p) { vec3 q=p-(sonicPos+vec3(0.18,-0.43,0.0)); q.yz=mat2(cos(0.5),-sin(0.5),sin(0.5),cos(0.5))*q.yz; return sdEllipsoid(q,vec3(0.05,0.15,0.05)); }
 float sonicLegL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.07,-0.72,0.04)), vec3(0.06,0.12,0.07)); }
@@ -135,6 +181,20 @@ float sonicHandR(vec3 p) {
     vec3 q = p - (sonicPos + vec3(0.20, -0.43, 0.07));
     q.yz = mat2(cos(0.6), -sin(0.6), sin(0.6), cos(0.6)) * q.yz;
     return sdEllipsoid(q, vec3(0.08, 0.12, 0.09));
+}
+
+float sonicBelt(vec3 p) {
+    // Position centrale de la ceinture
+    vec3 beltCenter = sonicPos + vec3(0.0, -0.59, 0.0);
+
+    // Forme principale: une boîte fine pour la ceinture
+    float beltBox = sdBox(p - beltCenter, vec3(0.14, 0.018, 0.10));
+
+    // Boucle de ceinture (optionnel): une petite ellipsoïde
+    float beltBuckle = sdEllipsoid(p - (beltCenter + vec3(0.0, 0.0, 0.11)), vec3(0.035, 0.018, 0.015));
+
+    // Union des deux
+    return min(beltBox, beltBuckle);
 }
 
 // --- Floor SDF (water) ---
@@ -207,6 +267,7 @@ float map(vec3 p, out int partId) {
     float selashR = sonicEyelashR(p); if(selashR<d){d=selashR;partId=37;}
     float shandL = sonicHandL(p); if(shandL < d){ d = shandL; partId = 102; }
     float shandR = sonicHandR(p); if(shandR < d){ d = shandR; partId = 102; }
+    float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 103; }
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
     return d;
 }
@@ -336,6 +397,9 @@ void main(void) {
 
         // Sonic coloring (add more as needed)
         else if(partId==102) col = mix(vec3(1.0), vec3(0.97,0.97,0.99), yNorm)*li + 0.6*spec; // Sonic's white hands
+
+        else if(partId==103) col = mix(vec3(0.13,0.13,0.13), vec3(0.23,0.24,0.26), yNorm)*li + 0.5*spec; // Ceinture foncée
+
 
         // Outline for all
         int dummy;
