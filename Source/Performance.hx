@@ -44,7 +44,7 @@ class Performance extends Sprite
 	private var paddingY:Int = 3;
 
 	public var graphBarTickness = 3;
-	public var graphBarPadding = 1;
+	public var graphBarPadding = 0.5;
 	private var barHeight = 30;
 
 	private var memPeak:Float = 0;
@@ -178,12 +178,15 @@ class Performance extends Sprite
         graph.graphics.clear();
         for (i in 0...fpsHistoryLen){
         	graph.graphics.moveTo(graphBarTickness*i+i*graphBarPadding,barHeight);
-        	if (fpsHistory[i] > 55) color = 0x9fe198;
-        	else if (fpsHistory[i] > 40) color = 0xefdea2;
-        	else if (fpsHistory[i] > 30) color = 0xefbda2;
-        	else color = 0xeda0a4;
+        	if (fpsHistory[i] > 100) color = 0xdcffd8; 
+            else if (fpsHistory[i] > 90) color = 0xc3ffbc;
+            else if (fpsHistory[i] > 70) color = 0x9fe198;
+        	else if (fpsHistory[i] > 50) color = 0xefdea2;
+        	else if (fpsHistory[i] > 40) color = 0xefbda2;
+            else if (fpsHistory[i] > 30) color = 0xeda0a4;
+        	else color = 0xeda0a0;
         	graph.graphics.lineStyle(graphBarTickness, color, 0.5);
-        	graph.graphics.lineTo(graphBarTickness*i+i*graphBarPadding,barHeight-barHeight*fpsHistory[i]/60);
+        	graph.graphics.lineTo(graphBarTickness*i+i*graphBarPadding,barHeight-barHeight*fpsHistory[i]/100);
         }
 	}
 
