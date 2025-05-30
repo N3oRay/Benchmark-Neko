@@ -4,7 +4,7 @@ precision mediump float;
 
 /**
 
-Add more SDF-based details (eyelashes, fur texture, quill spikes, shoe buckles, whiskers, etc.)
+Ultra-real: More fur, stripes, mouth, and all previous SDF details!
 
 **/
 
@@ -57,20 +57,53 @@ float kittyDress(vec3 p){return sdBox(p-(kittyPos+vec3(0.0,-0.52,0.0)),vec3(0.21
 float kittyEyeShineL(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(-0.10,0.13,0.29)), vec3(0.008,0.012,0.014)); }
 float kittyEyeShineR(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.10,0.13,0.29)), vec3(0.008,0.012,0.014)); }
 // Kitty Whiskers
-float kittyWhiskerL1(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,0.08,0.21),kittyPos+vec3(-0.33,0.12,0.25),0.012);}
-float kittyWhiskerL2(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,0.04,0.23),kittyPos+vec3(-0.33,0.01,0.28),0.012);}
-float kittyWhiskerL3(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,-0.04,0.20),kittyPos+vec3(-0.33,-0.09,0.23),0.011);}
-float kittyWhiskerR1(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,0.08,0.21),kittyPos+vec3(0.33,0.12,0.25),0.012);}
-float kittyWhiskerR2(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,0.04,0.23),kittyPos+vec3(0.33,0.01,0.28),0.012);}
-float kittyWhiskerR3(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,-0.04,0.20),kittyPos+vec3(0.33,-0.09,0.23),0.011);}
+float kittyWhiskerL1(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,0.08,0.21),kittyPos+vec3(-0.33,0.12,0.25),0.0012);}
+float kittyWhiskerL2(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,0.04,0.23),kittyPos+vec3(-0.33,0.01,0.28),0.0012);}
+float kittyWhiskerL3(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,-0.04,0.20),kittyPos+vec3(-0.33,-0.09,0.23),0.0011);}
+float kittyWhiskerR1(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,0.08,0.21),kittyPos+vec3(0.33,0.12,0.25),0.0012);}
+float kittyWhiskerR2(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,0.04,0.23),kittyPos+vec3(0.33,0.01,0.28),0.0012);}
+float kittyWhiskerR3(vec3 p){return sdCapsule(p,kittyPos+vec3(0.18,-0.04,0.20),kittyPos+vec3(0.33,-0.09,0.23),0.0011);}
 // Kitty Eyelashes (left eye, right eye)
 float kittyEyelashL1(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.12,0.14,0.28),kittyPos+vec3(-0.18,0.20,0.27),0.007);}
 float kittyEyelashL2(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.09,0.16,0.28),kittyPos+vec3(-0.13,0.23,0.27),0.007);}
 float kittyEyelashR1(vec3 p){return sdCapsule(p,kittyPos+vec3(0.12,0.14,0.28),kittyPos+vec3(0.18,0.20,0.27),0.007);}
 float kittyEyelashR2(vec3 p){return sdCapsule(p,kittyPos+vec3(0.09,0.16,0.28),kittyPos+vec3(0.13,0.23,0.27),0.007);}
+// Kitty mouth (SDF arc)
+float kittyMouth(vec3 p) {
+    vec3 q = p-(kittyPos+vec3(0.0,-0.04,0.30));
+    float r = 0.055;
+    float t = atan(q.y, q.x);
+    float arc = abs(length(q.xz)-r);
+    float yArc = abs(q.y-0.01*sin(2.5*t));
+    return max(arc-0.0012, yArc-0.01);
+}
+// Kitty fur stripes (SDF ellipsoid bands)
+float kittyStripe1(vec3 p) {
+    vec3 base = kittyPos+vec3(0.0,0.219,0.24);
+    float d = length(p-base)-0.048;
+    float y = p.y-(kittyPos.y+0.21);
+    float mask = smoothstep(0.0017,0.012,abs(y));
+    return d-0.009*mask;
+}
+float kittyStripeL(vec3 p) {
+    vec3 base = kittyPos+vec3(-0.09,0.219,0.23);
+    float d = length(p-base)-0.027;
+    float y = p.y-(kittyPos.y+0.19);
+    float mask = smoothstep(0.0011,0.008,abs(y));
+    return d-0.005*mask;
+}
+float kittyStripeR(vec3 p) {
+    vec3 base = kittyPos+vec3(0.09,0.219,0.23);
+    float d = length(p-base)-0.027;
+    float y = p.y-(kittyPos.y+0.19);
+    float mask = smoothstep(0.0011,0.008,abs(y));
+    return d-0.005*mask;
+}
 
 // --- Sonic SDFs (at x=+0.4) ---
 vec3 sonicPos = vec3(0.4, 0.0, 0.0);
+// You should define Sonic's body, head, arms, legs, etc. here...
+
 float sonicHead(vec3 p) { return sdEllipsoid(p-sonicPos, vec3(0.33,0.31,0.29)); }
 float sonicFace(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.05,0.17)),vec3(0.22,0.17,0.14)); }
 float sonicBody(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.49,0.0)), vec3(0.13,0.19,0.11)); }
@@ -105,6 +138,19 @@ float sonicQuillBack(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.00,-0.3
 float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.11,0.14,0.28),sonicPos+vec3(-0.16,0.12,0.27),0.006); }
 float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.11,0.14,0.28),sonicPos+vec3(0.16,0.12,0.27),0.006); }
 
+
+// Sonic Hands SDF (white gloves)
+float sonicHandL(vec3 p) {
+    vec3 q = p - (sonicPos + vec3(-0.20, -0.43, 0.07));
+    q.yz = mat2(cos(-0.6), -sin(-0.6), sin(-0.6), cos(-0.6)) * q.yz;
+    return sdEllipsoid(q, vec3(0.08, 0.12, 0.09));
+}
+float sonicHandR(vec3 p) {
+    vec3 q = p - (sonicPos + vec3(0.20, -0.43, 0.07));
+    q.yz = mat2(cos(0.6), -sin(0.6), sin(0.6), cos(0.6)) * q.yz;
+    return sdEllipsoid(q, vec3(0.08, 0.12, 0.09));
+}
+
 // --- Floor SDF (water) ---
 float waterFloor(vec3 p) {
     return p.y + 0.82 + 0.07*sin(8.0*p.x+time*1.2)*sin(8.0*p.z+time*1.4)*0.5;
@@ -121,7 +167,7 @@ float map(vec3 p, out int partId) {
     float legL=kittyLegL(p); if(legL<d){d=legL;partId=4;}
     float legR=kittyLegR(p); if(legR<d){d=legR;partId=4;}
     float tail=kittyTail(p); if(tail<d){d=tail;partId=5;}
-    float dress=kittyDress(p); if(dress<d){d=dress;partId=6;}
+    //float dress=kittyDress(p); if(dress<d){d=dress;partId=6;}
     float bow=kittyBow(p); if(bow<d){d=bow;partId=7;}
     float nose=kittyNose(p); if(nose<d){d=nose;partId=8;}
     float eyeL=kittyEyeL(p); if(eyeL<d){d=eyeL;partId=9;}
@@ -138,7 +184,15 @@ float map(vec3 p, out int partId) {
     float kel2 = kittyEyelashL2(p); if(kel2<d){d=kel2;partId=15;}
     float ker1 = kittyEyelashR1(p); if(ker1<d){d=ker1;partId=15;}
     float ker2 = kittyEyelashR2(p); if(ker2<d){d=ker2;partId=15;}
-    // Sonic
+    //float kMouth = kittyMouth(p); if(kMouth<d){d=kMouth;partId=16;}
+    //float kstripe1 = kittyStripe1(p); if(kstripe1<d){d=kstripe1;partId=17;}
+    //float kstripeL = kittyStripeL(p); if(kstripeL<d){d=kstripeL;partId=18;}
+    //float kstripeR = kittyStripeR(p); if(kstripeR<d){d=kstripeR;partId=19;}
+    // Sonic ... you should add Sonic SDF parts here ...
+// --- Sonic SDFs (at x=+0.4) ---
+vec3 sonicPos = vec3(0.4, 0.0, 0.0);
+	
+	    // Sonic
     float sh = sonicHead(p); if(sh<d){d=sh;partId=20;}
     float sf = sonicFace(p); if(sf<d){d=sf;partId=21;}
     float sb = sonicBody(p); if(sb<d){d=sb;partId=22;}
@@ -169,7 +223,9 @@ float map(vec3 p, out int partId) {
     float squillB = sonicQuillBack(p); if(squillB<d){d=squillB;partId=36;}
     float selashL = sonicEyelashL(p); if(selashL<d){d=selashL;partId=37;}
     float selashR = sonicEyelashR(p); if(selashR<d){d=selashR;partId=37;}
-    // Floor
+
+    float shandL = sonicHandL(p); if(shandL < d){ d = shandL; partId = 102; }
+    float shandR = sonicHandR(p); if(shandR < d){ d = shandR; partId = 102; }
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
     return d;
 }
@@ -256,7 +312,7 @@ void main(void) {
             fur = mix(1.0, mix(0.93,1.0,mod(f*7.0,1.0)), step(0.8,f));
         }
 
-        // Kitty
+        // Kitty coloring
         if(partId==0||partId==1) col=mix(vec3(1.0,0.98,0.98), vec3(0.98,0.92,0.93), yNorm)*li*fur;
         else if(partId==2) col=mix(vec3(1.0,0.98,0.98), vec3(0.99,0.94,0.97), yNorm)*li*fur;
         else if(partId==3) col=mix(vec3(1.0,0.98,0.98), vec3(1.0,0.97,0.97), yNorm)*li*fur;
@@ -269,25 +325,32 @@ void main(void) {
         else if(partId==12) col = vec3(1.0,1.0,1.0)*li + 0.8*spec;
         else if(partId==14) col = vec3(0.1,0.1,0.1)*li + 0.6*spec; // Whiskers
         else if(partId==15) col = vec3(0.05,0.05,0.08)*li + 0.5*spec; // Eyelashes
-        // Sonic
+        else if(partId==16) col = vec3(0.13,0.08,0.10)*li + 0.6*spec; // Mouth
+        else if(partId==17||partId==18||partId==19) col = vec3(1.90,0.0,1.10)*li; // Kitty fur stripes
+		
+	// Sonic
         else if(partId==20) col = mix(vec3(0.12,0.32,0.85), vec3(0.32,0.6,0.95), yNorm)*li + 0.18*fres;
-        else if(partId==21) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li;
-        else if(partId==22) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li + 0.12*fres;
-        else if(partId==23) col = mix(vec3(1.0,0.89,0.68), vec3(1.0,0.97,0.78), yNorm)*li;
-        else if(partId==24) col = mix(vec3(0.18,0.20,0.65), vec3(0.20,0.35,0.85), yNorm)*li;
-        else if(partId==25) col = mix(vec3(0.93,0.13,0.15), vec3(1.0,0.42,0.45), yNorm)*li + 0.09*spec;
-        else if(partId==26) col = mix(vec3(0.12,0.32,0.85), vec3(0.32,0.6,0.95), yNorm)*li + 0.18*fres; // main spikes
-        else if(partId==27) col = mix(vec3(0.99,0.99,0.98), vec3(0.93,0.95,0.99), yNorm)*li + 1.0*spec + 0.7*fres;
-        else if(partId==28) col = mix(vec3(0.08,0.34,0.12), vec3(0.29,0.67,0.34), yNorm)*li + 0.8*spec + 0.6*fres;
-        else if(partId==29) col = mix(vec3(0.1,0.1,0.1),vec3(0.23,0.23,0.25),yNorm)*li + 1.0*spec + 0.7*fres;
-        else if(partId==30) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li;
-        else if(partId==31) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li;
-        else if(partId==32) col = mix(vec3(0.18,0.45,0.95), vec3(0.35,0.61,0.99), yNorm)*li + 1.0*spec + 0.8*fres;
-        else if(partId==33) col = vec3(1.0,1.0,1.0) + 1.0*spec;
-        else if(partId==34) col = vec3(0.98,0.97,0.95)*li + 0.5*spec; // shoe buckles
-        else if(partId==35) col = vec3(0.31,0.53,0.96)*li + 0.22*fres; // top quill
-        else if(partId==36) col = vec3(0.23,0.30,0.84)*li + 0.17*fres; // back quill
-        else if(partId==37) col = vec3(0.06,0.09,0.14)*li + 0.5*spec; // Sonic eyelashes
+         else if(partId==21) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li;
+         else if(partId==22) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li + 0.12*fres;
+         else if(partId==23) col = mix(vec3(1.0,0.89,0.68), vec3(1.0,0.97,0.78), yNorm)*li;
+         else if(partId==24) col = mix(vec3(0.18,0.20,0.65), vec3(0.20,0.35,0.85), yNorm)*li;
+         else if(partId==25) col = mix(vec3(0.93,0.13,0.15), vec3(1.0,0.42,0.45), yNorm)*li + 0.09*spec;
+         else if(partId==26) col = mix(vec3(0.12,0.32,0.85), vec3(0.32,0.6,0.95), yNorm)*li + 0.18*fres; // main spikes
+         else if(partId==27) col = mix(vec3(0.99,0.99,0.98), vec3(0.93,0.95,0.99), yNorm)*li + 1.0*spec + 0.7*fres;
+         else if(partId==28) col = mix(vec3(0.08,0.34,0.12), vec3(0.29,0.67,0.34), yNorm)*li + 0.8*spec + 0.6*fres;
+         else if(partId==29) col = mix(vec3(0.1,0.1,0.1),vec3(0.23,0.23,0.25),yNorm)*li + 1.0*spec + 0.7*fres;
+         else if(partId==30) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li;
+         else if(partId==31) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li;
+         else if(partId==32) col = mix(vec3(0.18,0.45,0.95), vec3(0.35,0.61,0.99), yNorm)*li + 1.0*spec + 0.8*fres;
+         else if(partId==33) col = vec3(1.0,1.0,1.0) + 1.0*spec;
+         else if(partId==34) col = vec3(0.98,0.97,0.95)*li + 0.5*spec; // shoe buckles
+         else if(partId==35) col = vec3(0.31,0.53,0.96)*li + 0.22*fres; // top quill
+         else if(partId==36) col = vec3(0.23,0.30,0.84)*li + 0.17*fres; // back quill
+         else if(partId==37) col = vec3(0.06,0.09,0.14)*li + 0.5*spec; // Sonic eyelashes
+	
+
+        // Sonic coloring (add more as needed)
+        else if(partId==102) col = mix(vec3(1.0), vec3(0.97,0.97,0.99), yNorm)*li + 0.6*spec; // Sonic's white hands
 
         // Outline for all
         int dummy;
@@ -307,4 +370,3 @@ void main(void) {
 
     gl_FragColor = vec4(col, 1.0);
 }
-	
