@@ -1,7 +1,7 @@
 // Original by @N3oray, reworked for clarity & structure
 
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
 uniform float time;
@@ -9,7 +9,7 @@ uniform vec2 mouse;
 uniform vec2 resolution;
 
 // Constants
-const float PI = 3.14159265;
+const float PI = 3.1415926535898;
 const float TAU = 6.2831853;
 
 // Palette selector (0, 1, 2, etc.)

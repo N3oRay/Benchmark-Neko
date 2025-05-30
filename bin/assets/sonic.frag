@@ -74,36 +74,36 @@ vec3 sonicPos = vec3(0.4, 0.0, 0.0);
 float sonicHead(vec3 p) { return sdEllipsoid(p-sonicPos, vec3(0.33,0.31,0.29)); }
 float sonicFace(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.05,0.17)),vec3(0.22,0.17,0.14)); }
 float sonicBody(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.49,0.0)), vec3(0.13,0.19,0.11)); }
-float sonicArmL(vec3 p) { vec3 q=p-(sonicPos+vec3(-0.18,-0.43,0.0)); q.yz=mat2(cos(-0.5),-sin(-0.5),sin(-0.5),cos(-0.5))*q.yz; return sdEllipsoid(q,vec3(0.05,0.15,0.05)); }
+float sonicArmL(vec3 p) { vec3 q=p-(sonicPos+vec3(-0.18,-0.43,0.0)); q.yz=mat2(cos(-0.1),-sin(-0.1),sin(-0.5),cos(-0.5))*q.yz; return sdEllipsoid(q,vec3(0.05,0.15,0.05)); }
 float sonicArmR(vec3 p) { vec3 q=p-(sonicPos+vec3(0.18,-0.43,0.0)); q.yz=mat2(cos(0.5),-sin(0.5),sin(0.5),cos(0.5))*q.yz; return sdEllipsoid(q,vec3(0.05,0.15,0.05)); }
 float sonicLegL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.07,-0.72,0.04)), vec3(0.06,0.12,0.07)); }
 float sonicLegR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.07,-0.72,0.04)), vec3(0.06,0.12,0.07)); }
 float sonicShoeL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.07,-0.88,0.09)), vec3(0.11,0.05,0.11)); }
 float sonicShoeR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.07,-0.88,0.09)), vec3(0.11,0.05,0.11)); }
-float sonicSpike1(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.21,0.12,-0.16)),vec3(0.18,0.09,0.10)); }
-float sonicSpike2(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.17,-0.23)),vec3(0.17,0.10,0.10)); }
-float sonicSpike3(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.23,0.10,-0.16)),vec3(0.18,0.09,0.10)); }
-float sonicEyeL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.05,0.25)),vec3(0.055,0.07,0.03)); }
-float sonicEyeR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.06,0.05,0.25)),vec3(0.055,0.07,0.03)); }
+float sonicSpike1(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.21,0.12,-0.16)),vec3(0.10,0.35,0.18)); }
+float sonicSpike2(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.17,-0.23)),vec3(0.10,0.38,0.38)); }
+float sonicSpike3(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.23,0.10,-0.16)),vec3(0.08,0.35,0.15)); }
+float sonicEyeL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.05,0.25)),vec3(0.08,0.099,0.03)); }
+float sonicEyeR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.06,0.05,0.25)),vec3(0.08,0.099,0.03)); }
 float sonicPupilL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.06,0.28)),vec3(0.02,0.025,0.015)); }
 float sonicPupilR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.06,0.06,0.28)),vec3(0.02,0.025,0.015)); }
-float sonicNose(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.01,0.32)),vec3(0.025,0.018,0.018)); }
-float sonicEarL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.15,0.21,0.07)),vec3(0.045,0.065,0.04)); }
-float sonicEarR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.15,0.21,0.07)),vec3(0.045,0.065,0.04)); }
-float sonicBelly(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.59,0.09)),vec3(0.07,0.07,0.03)); }
-float sonicIrisL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.06,0.275)), vec3(0.027,0.035,0.013)); }
-float sonicIrisR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.06,0.06,0.275)), vec3(0.027,0.035,0.013)); }
-float sonicEyeHighlightL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.053,0.085,0.292)), vec3(0.009,0.011,0.005)); }
-float sonicEyeHighlightR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.053,0.085,0.292)), vec3(0.009,0.011,0.005)); }
+float sonicNose(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.01,0.32)),vec3(0.025,0.030,0.025)); }
+float sonicEarL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.15,0.21,0.07)),vec3(0.105,0.165,0.14)); }
+float sonicEarR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.15,0.21,0.07)),vec3(0.105,0.165,0.14)); }
+float sonicBelly(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,-0.465,0.089)),vec3(0.07,0.12,0.0234)); }
+float sonicIrisL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.06,0.275)), vec3(0.029,0.0395,0.018)); }
+float sonicIrisR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.06,0.06,0.275)), vec3(0.029,0.0495,0.018)); }
+float sonicEyeHighlightL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.053,0.085,0.292)), vec3(0.009,0.010,0.005)); }
+float sonicEyeHighlightR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.053,0.085,0.292)), vec3(0.009,0.010,0.005)); }
 // Sonic shoe buckles (white bands)
 float sonicShoeBuckleL(vec3 p) { return sdBox(p-(sonicPos+vec3(-0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
 float sonicShoeBuckleR(vec3 p) { return sdBox(p-(sonicPos+vec3(0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
 // Sonic extra quill spikes (small, on top/back)
 float sonicQuillTop(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.34,-0.13)),vec3(0.08,0.12,0.09)); }
-float sonicQuillBack(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.00,-0.38)),vec3(0.12,0.09,0.16)); }
+float sonicQuillBack(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.00,-0.38)),vec3(0.12,0.15,0.16)); }
 // Sonic eyelashes (subtle, above eyes)
-float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.11,0.14,0.28),sonicPos+vec3(-0.16,0.19,0.27),0.006); }
-float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.11,0.14,0.28),sonicPos+vec3(0.16,0.19,0.27),0.006); }
+float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.11,0.14,0.28),sonicPos+vec3(-0.16,0.12,0.27),0.006); }
+float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.11,0.14,0.28),sonicPos+vec3(0.16,0.12,0.27),0.006); }
 
 // --- Floor SDF (water) ---
 float waterFloor(vec3 p) {
@@ -209,12 +209,12 @@ void main(void) {
     col = mix(vec3(1.0,0.96,0.64), col, sunDisk);
 
     // Heart background
-    float heart = sdHeart(uv*1.7);
+    float heart = sdHeart(uv*-1.7);
     if(heart < 0.0)
         col = mix(col, vec3(1.0,0.32,0.74), 0.85);
 
     // Camera setup
-    vec3 ro = vec3(0.0,0.0,2.1);
+    vec3 ro = vec3(0.0,0.0,2.86891);
     float angle = sin(time*0.5)*0.12;
     float c = cos(angle), s = sin(angle);
     mat3 rotY = mat3(
@@ -307,3 +307,4 @@ void main(void) {
 
     gl_FragColor = vec4(col, 1.0);
 }
+	

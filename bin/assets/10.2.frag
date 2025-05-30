@@ -28,7 +28,7 @@ uniform mat4 u_projectionMatrix;
 #define FUZZ 0.5
 #define PHASELENGTH 30.0
 #define PHASE mod(iTime/PHASELENGTH,1.0)
-#define CUBENUM 60.0
+#define CUBENUM 160.0
 #define DISTANCEPERPHASE 150.0
 #define EPSILON 0.001
 
