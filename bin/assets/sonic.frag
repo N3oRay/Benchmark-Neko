@@ -375,12 +375,12 @@ float sonicChestR(vec3 p) {
 
 
 
-// Hanche latérale gauche
+// Hanche laterale gauche
 float sonicHipL(vec3 p) {
     vec3 center = sonicPos + vec3(-0.075, -0.23, 0.05);
     return sdEllipsoid(p - center, vec3(0.045, 0.06, 0.13));
 }
-// Hanche latérale droite
+// Hanche laterale droite
 float sonicHipR(vec3 p) {
     vec3 center = sonicPos + vec3(0.075, -0.23, 0.05);
     return sdEllipsoid(p - center, vec3(0.045, 0.06, 0.13));
@@ -584,7 +584,7 @@ void main(void) {
             fur = mix(1.0, mix(0.93,1.0,mod(f*7.0,1.0)), step(0.8,f));
         }
 
-        /*** Ajout d'un effet de fourrure pour Sonic ***/
+        /*** Ajout d un effet de fourrure pour Sonic ***/
         //float fur = 1.0;
         if(partId==20 || partId==22 || partId==26 || partId==27) { // têtes, corps, piques
             float f = hash21(p.xz*32.0 + p.y*12.0 + time*0.17);
@@ -639,16 +639,16 @@ void main(void) {
         // Sonic coloring (add more as needed)
         else if(partId==101) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li + 0.5*spec; // bas de la bouche
         else if(partId==102) col = mix(vec3(1.0), vec3(0.97,0.97,0.99), yNorm)*li + 0.6*spec; // Sonic's white hands
-        else if(partId==103) col = mix(vec3(0.13,0.13,0.13), vec3(0.23,0.24,0.26), yNorm)*li + 0.5*spec; // Ceinture foncée
+        else if(partId==103) col = mix(vec3(0.13,0.13,0.13), vec3(0.23,0.24,0.26), yNorm)*li + 0.5*spec; // Ceinture foncee
         else if(partId==104) col = mix(vec3(0.25,0.13,0.07), vec3(0.38,0.23,0.15), yNorm)*li + 0.5*spec; // bouche de Sonic
         else if(partId==105) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li + 0.14*fres; // hanches de Sonic
 
         else if(partId==200) {
             // Couleur de l'eau : bleu clair, transparence
             vec3 waterColor = vec3(0.2, 0.5, 0.9);
-            col = mix(col, waterColor, 1.0); // Mélange la couleur dessous et l'eau
+            col = mix(col, waterColor, 1.0); // Melange la couleur dessous et l'eau
             alpha = 0.4; // Ajoute la transparence, suppose que tu as une variable alpha
-            // Pour un effet de réflexion, tu peux rajouter un peu de fresnel :
+            // Pour un effet de reflexion, tu peux rajouter un peu de fresnel :
             // col += 0.2 * fres * vec3(0.4, 0.6, 0.95);
         }
 
@@ -670,4 +670,3 @@ void main(void) {
 
     gl_FragColor = vec4(col, alpha);
 }
-
