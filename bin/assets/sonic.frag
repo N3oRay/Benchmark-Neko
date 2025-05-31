@@ -478,7 +478,7 @@ float map(vec3 p, out int partId) {
     float squillB = sonicQuillBack(p); if(squillB<d){d=squillB;partId=36;}
     float selashL = sonicEyelashL(p); if(selashL<d){d=selashL;partId=37;}
     float selashR = sonicEyelashR(p); if(selashR<d){d=selashR;partId=37;}
-
+    // Museau et joue
     float cheekL = sonicCheekL(p); if(cheekL < d) { d = cheekL; partId = 101; }
     float cheekR = sonicCheekR(p); if(cheekR < d) { d = cheekR; partId = 101; }
     float chin = sonicChin(p); if(chin < d) { d = chin; partId = 101; }
