@@ -94,7 +94,6 @@ class Main extends Sprite
 	private var initialized:Bool;
 	private var startTime:Int;
     private var perf:Performance;
-    //public var meta:String;
 
 
 	public function new()
@@ -223,7 +222,6 @@ class Main extends Sprite
 
 		glVertexPosition = gl.getAttribLocation(glCurrentProgram, "position");
 		gl.enableVertexAttribArray(glVertexPosition);
-
 		glTimeUniform = gl.getUniformLocation(program, "time");
 		glMouseUniform = gl.getUniformLocation(program, "mouse");
 		glResolutionUniform = gl.getUniformLocation(program, "resolution");
