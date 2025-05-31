@@ -138,12 +138,6 @@ float sonicHead(vec3 p) {
     return sdEllipsoid(p - (sonicPos + vec3(0.0, 0.08, 0.08)), vec3(0.20, 0.16, 0.15));
 }
 
-// --- TÊTE (compacte) ---
-/*
-float sonicHead(vec3 p) {
-    return sdEllipsoid(p - (sonicPos + vec3(0.0, 0.07, 0.08)), vec3(0.15, 0.13, 0.12));
-}
-*/
 // --- OREILLES (plus hautes, plus petites) ---
 float sonicEarL(vec3 p) {
     vec3 center = sonicPos + vec3(-0.07, 0.18, 0.05);
@@ -214,11 +208,6 @@ float sonicLegL(vec3 p) {
 float sonicLegR(vec3 p) {
     return sdEllipsoid(p - (sonicPos + vec3(0.05, -0.31, 0.08)), vec3(0.022, 0.10, 0.028));
 }
-
-
-
-
-
 
 // --- PIEDS (plus grands, ovales, plats) ---
 float sonicShoeL(vec3 p) {
@@ -345,12 +334,9 @@ float sonicEyeHighlightR(vec3 p) {
 }
 
 
-
-
-
 float sonicShoeBuckleL(vec3 p) { return sdBox(p-(sonicPos+vec3(-0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
 float sonicShoeBuckleR(vec3 p) { return sdBox(p-(sonicPos+vec3(0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
-//float sonicQuillTop(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.34,-0.13)),vec3(0.08,0.12,0.09)); }
+// Quill
 float sonicQuillTop(vec3 p) {
     vec3 base = sonicPos + vec3(0.0, 0.27, -0.17);
     float main = sdEllipsoid(p - base, vec3(0.14, 0.26, 0.13));
@@ -370,8 +356,6 @@ float sonicQuillR(vec3 p) {
     float tip = sdCapsule(p, base + vec3(0.06, 0.18, -0.07), base + vec3(0.22, 0.41, -0.26), 0.045);
     return min(main, tip);
 }
-//float sonicQuillBack(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.0,0.00,-0.38)),vec3(0.12,0.15,0.16)); }
-
 float sonicQuillBack(vec3 p) {
     vec3 base = sonicPos + vec3(0.0, -0.04, -0.41);
     return sdEllipsoid(p - base, vec3(0.13, 0.17, 0.18));
@@ -379,9 +363,6 @@ float sonicQuillBack(vec3 p) {
 
 float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.11,0.14,0.28),sonicPos+vec3(-0.16,0.12,0.27),0.006); }
 float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.11,0.14,0.28),sonicPos+vec3(0.16,0.12,0.27),0.006); }
-
-
-
 
 
 // Bouche de Sonic avec des formes convexes
@@ -548,9 +529,6 @@ float sSpikeSideR2 = sonicSpikeSideR2(p); if(sSpikeSideR2 < d) { d = sSpikeSideR
     float ships = sonicHips(p); if(ships < d) { d = ships; partId = 105; }
     float hipL = sonicHipL(p); if(hipL < d) { d = hipL; partId = 105; }
     float hipR = sonicHipR(p); if(hipR < d) { d = hipR; partId = 105; }
-
-    
-
 
 
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
