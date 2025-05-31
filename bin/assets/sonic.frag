@@ -49,7 +49,6 @@ float kittyBow(vec3 p) {
 float kittyNose(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.0,0.02,0.28)),vec3(0.045,0.03,0.025)); }
 float kittyEyeL(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(-0.10,0.09,0.29)),vec3(0.025,0.045,0.015)); }
 float kittyEyeR(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.10,0.09,0.29)),vec3(0.025,0.045,0.015)); }
-float kittyDress(vec3 p){return sdBox(p-(kittyPos+vec3(0.0,-0.52,0.0)),vec3(0.21,0.12,0.13)); }
 float kittyEyeShineL(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(-0.10,0.13,0.29)), vec3(0.008,0.012,0.014)); }
 float kittyEyeShineR(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.10,0.13,0.29)), vec3(0.008,0.012,0.014)); }
 float kittyWhiskerL1(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.18,0.08,0.21),kittyPos+vec3(-0.33,0.12,0.25),0.0012);}
@@ -181,7 +180,6 @@ float sonicLegR(vec3 p) {
 }
 
 
-
 /**  Pique principal du haut OK  **/
 float sonicSpikeTop(vec3 p) {
     vec3 base = sonicPos + vec3(0.0, 0.219, -0.08);
@@ -289,11 +287,11 @@ float sonicShoeStripeR(vec3 p) {
 /*****************************************************************/
 
 // Yeux séparés (pour reflets ou détails, optionnel) OK
-float sonicEyeL(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(-0.07,0.123,0.180)), vec3(0.07,0.10,0.04)); 
+float sonicEyeL(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(-0.07,0.123,0.180)), vec3(0.07,0.10,0.04));
 }
-float sonicEyeR(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(0.07,0.123,0.180)), vec3(0.07,0.10,0.04)); 
+float sonicEyeR(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(0.07,0.123,0.180)), vec3(0.07,0.10,0.04));
 }
 
 /** Dessous des yeux  x,y,z   OK **/
@@ -311,19 +309,19 @@ float sonicPupilR(vec3 p) {
 }
 
 // Iris (légèrement décalées, taille plus grande)
-float sonicIrisL(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(-0.05,0.155,0.20)), vec3(0.044, 0.055, 0.032)); 
+float sonicIrisL(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(-0.05,0.155,0.20)), vec3(0.044, 0.055, 0.032));
 }
-float sonicIrisR(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(0.05,0.155,0.20)), vec3(0.044, 0.055, 0.032)); 
+float sonicIrisR(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(0.05,0.155,0.20)), vec3(0.044, 0.055, 0.032));
 }
 
 // Reflets/Highlights (plus hauts)
-float sonicEyeHighlightL(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(-0.055,0.175,0.2332)), vec3(0.012,0.012,0.006)); 
+float sonicEyeHighlightL(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(-0.055,0.175,0.2332)), vec3(0.012,0.012,0.006));
 }
-float sonicEyeHighlightR(vec3 p) { 
-    return sdEllipsoid(p-(sonicPos+vec3(0.055,0.175,0.2332)), vec3(0.012,0.012,0.006)); 
+float sonicEyeHighlightR(vec3 p) {
+    return sdEllipsoid(p-(sonicPos+vec3(0.055,0.175,0.2332)), vec3(0.012,0.012,0.006));
 }
 
 
@@ -407,7 +405,7 @@ float sonicHipR(vec3 p) {
 }
 
 
-//   Floor SDF (water)   
+//   Floor SDF (water)
 float waterFloor(vec3 p) {
     return p.y + 0.9 + 0.07*sin(8.0*p.x+time*1.2)*sin(8.0*p.z+time*1.4)*0.5;
 }
@@ -417,7 +415,7 @@ float waterSurface(vec3 p) {
     return p.y + 0.9;
 }
 
-//   Scene SDF   
+//   Scene SDF
 float map(vec3 p, out int partId) {
     float d=kittyHead(p); partId=0;
     float earL=kittyEarL(p); if(earL<d){d=earL;partId=1;}
@@ -428,7 +426,6 @@ float map(vec3 p, out int partId) {
     float legL=kittyLegL(p); if(legL<d){d=legL;partId=4;}
     float legR=kittyLegR(p); if(legR<d){d=legR;partId=4;}
     float tail=kittyTail(p); if(tail<d){d=tail;partId=5;}
-    //float dress=kittyDress(p); if(dress<d){d=dress;partId=6;}
     float bow=kittyBow(p); if(bow<d){d=bow;partId=7;}
     float nose=kittyNose(p); if(nose<d){d=nose;partId=8;}
     float eyeL=kittyEyeL(p); if(eyeL<d){d=eyeL;partId=9;}
@@ -446,7 +443,7 @@ float map(vec3 p, out int partId) {
     float ker1 = kittyEyelashR1(p); if(ker1<d){d=ker1;partId=15;}
     float ker2 = kittyEyelashR2(p); if(ker2<d){d=ker2;partId=15;}
 
-    //    Sonic SDFs (at x=+0.4)   
+    //    Sonic SDFs (at x=+0.4)
     float sh = sonicHead(p); if(sh<d){d=sh;partId=20;}
     float sf = sonicFace(p); if(sf<d){d=sf;partId=21;}
     float sb = sonicBody(p); if(sb<d){d=sb;partId=22;}
@@ -457,8 +454,6 @@ float map(vec3 p, out int partId) {
     float slR = sonicLegR(p); if(slR<d){d=slR;partId=24;}
     float slHL = sonicHipL(p); if(slR<d){d=slR;partId=24;}
     float slHR = sonicHipR(p); if(slR<d){d=slR;partId=24;}
-    //float sshL = sonicShoeL(p); if(sshL<d){d=sshL;partId=25;}
-    //float sshR = sonicShoeR(p); if(sshR<d){d=sshR;partId=25;}
 
     float sSpikeTop = sonicSpikeTop(p); if(sSpikeTop < d) { d = sSpikeTop; partId = 26; }
     float sSpikeL   = sonicSpikeL(p);   if(sSpikeL   < d) { d = sSpikeL;   partId = 26; }
@@ -551,7 +546,7 @@ float phongSpecular(vec3 n, vec3 v, vec3 ldir, float shininess) {
     return pow(max(dot(n, h), 0.0), shininess);
 }
 
-/*** Main ***/
+/**************************************** Main ***/
 void main(void) {
     vec2 uv = (gl_FragCoord.xy - 0.5*resolution.xy) / resolution.y;
     float alpha = 1.0;
