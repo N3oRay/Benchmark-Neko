@@ -97,84 +97,141 @@ float kittyStripeR(vec3 p) {
 // --- Sonic SDFs (at x=+0.4) ---
 vec3 sonicPos = vec3(0.4, 0.0, 0.0);
 
-// --- BODY ---
-
-// Tête (très grosse)
-float sonicHead(vec3 p) {
-    return sdEllipsoid(p-sonicPos, vec3(0.39,0.33,0.36));
+// --- HANCHES (plus basses, plus larges, proche du début des jambes) ---
+float sonicHips(vec3 p) {
+    vec3 hipsCenter = sonicPos + vec3(0.0, -0.15, 0.10); // Y plus bas, Z légèrement avancé
+    return sdEllipsoid(p - hipsCenter, vec3(0.07, 0.035, 0.06));
 }
 
-// Visage/museau plus allongé et avancé
+// --- CEINTURE (fine, ovale, centrée sur les hanches) ---
+float sonicBelt(vec3 p) {
+    vec3 beltCenter = sonicPos + vec3(0.0, -0.17, 0.10); // Juste sous les hanches
+    return sdEllipsoid(p - beltCenter, vec3(0.075, 0.012, 0.045));
+}
+
+// --- YEUX (plus petits, moins ovales, rapprochés) ---
+float sonicEyes(vec3 p) {
+    vec3 center = sonicPos + vec3(0.0, 0.09, 0.18); // Plus bas
+    return sdEllipsoid(p - center, vec3(0.06, 0.07, 0.03)); // Moins haut
+}
+
+// --- MUSEAU (petit ovale sous les yeux) ---
 float sonicFace(vec3 p) {
-    // Plus haut, moins épais, plus proche des yeux
-    vec3 faceCenter = sonicPos + vec3(0.0, -0.025, 0.23);
-    float mainFace = sdEllipsoid(p - faceCenter, vec3(0.18, 0.10, 0.10));
-    return mainFace;
+    vec3 faceCenter = sonicPos + vec3(0.0, 0.04, 0.21); // Remonté
+    return sdEllipsoid(p - faceCenter, vec3(0.05, 0.025, 0.04)); // Bcp moins haut
 }
 
-// Corps (très fin et court)
+// --- NEZ (plus gros, plus haut) ---
+float sonicNose(vec3 p) {
+    vec3 center = sonicPos + vec3(0.0, 0.07, 0.25);
+    return sdEllipsoid(p - center, vec3(0.018, 0.021, 0.018));
+}
+
+// --- BOUCHE (juste sous le nez) ---
+float sonicMouth(vec3 p) {
+    vec3 center = sonicPos + vec3(0.02, 0.025, 0.22);
+    return sdEllipsoid(p - center, vec3(0.012, 0.007, 0.007));
+}
+
+// --- TÊTE (réduite, un peu plus ovale) ---
+float sonicHead(vec3 p) {
+    return sdEllipsoid(p - (sonicPos + vec3(0.0, 0.08, 0.08)), vec3(0.20, 0.16, 0.15));
+}
+
+// --- TÊTE (compacte) ---
+/*
+float sonicHead(vec3 p) {
+    return sdEllipsoid(p - (sonicPos + vec3(0.0, 0.07, 0.08)), vec3(0.15, 0.13, 0.12));
+}
+*/
+// --- OREILLES (plus hautes, plus petites) ---
+float sonicEarL(vec3 p) {
+    vec3 center = sonicPos + vec3(-0.07, 0.18, 0.05);
+    return sdEllipsoid(p - center, vec3(0.025, 0.035, 0.022));
+}
+float sonicEarR(vec3 p) {
+    vec3 center = sonicPos + vec3(0.07, 0.18, 0.05);
+    return sdEllipsoid(p - center, vec3(0.025, 0.035, 0.022));
+}
+
+// --- COU ---
+float sonicNeck(vec3 p) {
+    vec3 base = sonicPos + vec3(0.0, -0.01, 0.10);
+    return sdEllipsoid(p - base, vec3(0.03, 0.013, 0.03));
+}
+
+// --- CORPS (plus grand et plus haut) ---
 float sonicBody(vec3 p) {
-    vec3 bodyCenter = sonicPos + vec3(0.0, -0.56, 0.0);
-    float trunk = sdEllipsoid(p - bodyCenter, vec3(0.09, 0.13, 0.07));
-    return trunk;
+    vec3 bodyCenter = sonicPos + vec3(0.0, -0.08, 0.09);
+    float top = sdEllipsoid(p - (bodyCenter + vec3(0.0, 0.03, 0.01)), vec3(0.07, 0.07, 0.07));
+    float bottom = sdEllipsoid(p - (bodyCenter + vec3(0.0, -0.05, 0.01)), vec3(0.07, 0.11, 0.07));
+    return min(top, bottom);
 }
 
-// ===================
-// BRAS
-// ===================
+// --- VENTRE (beige, bien fusionné au torse) ---
+float sonicBelly(vec3 p) {
+    vec3 center = sonicPos + vec3(0.0, -0.10, 0.14);
+    return sdEllipsoid(p - center, vec3(0.045, 0.055, 0.025));
+}
+
+// --- BRAS (plus longs) ---
 float sonicArmL(vec3 p) {
-    // Bras long, fin, part du haut du torse, incliné vers le bas
-    vec3 base = sonicPos + vec3(-0.14, -0.33, 0.05); // point d’attache plus haut, plus proche du torse
+    vec3 base = sonicPos + vec3(-0.07, 0.01, 0.09);
     vec3 q = p - base;
-    q.yz = mat2(cos(-0.25), -sin(-0.25), sin(-0.25), cos(-0.25)) * q.yz;
-    return sdEllipsoid(q, vec3(0.03, 0.27, 0.035));
+    q.yz = mat2(cos(-0.37), -sin(-0.37), sin(-0.37), cos(-0.37)) * q.yz;
+    return sdEllipsoid(q, vec3(0.018, 0.14, 0.022));
 }
 float sonicArmR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.14, -0.33, 0.05);
+    vec3 base = sonicPos + vec3(0.07, 0.01, 0.09);
     vec3 q = p - base;
-    q.yz = mat2(cos(0.25), -sin(0.25), sin(0.25), cos(0.25)) * q.yz;
-    return sdEllipsoid(q, vec3(0.03, 0.27, 0.035));
+    q.yz = mat2(cos(0.37), -sin(0.37), sin(0.37), cos(0.37)) * q.yz;
+    return sdEllipsoid(q, vec3(0.018, 0.14, 0.022));
 }
-// ===================
-// JAMBES (longues, fines, bien positionnées)
-// ===================
+
+// --- MAINS (plus grandes) ---
+float sonicHandL(vec3 p) {
+    vec3 palmCenter = sonicPos + vec3(-0.14, -0.08, 0.13);
+    return sdEllipsoid(p - palmCenter, vec3(0.03, 0.03, 0.028));
+}
+float sonicHandR(vec3 p) {
+    vec3 palmCenter = sonicPos + vec3(0.14, -0.08, 0.13);
+    return sdEllipsoid(p - palmCenter, vec3(0.03, 0.03, 0.028));
+}
+
+// --- CUISSES (transition jambe/tronc) ---
+float sonicThighL(vec3 p) {
+    return sdEllipsoid(p - (sonicPos + vec3(-0.03, -0.16, 0.08)), vec3(0.018, 0.035, 0.02));
+}
+float sonicThighR(vec3 p) {
+    return sdEllipsoid(p - (sonicPos + vec3(0.03, -0.16, 0.08)), vec3(0.018, 0.035, 0.02));
+}
+
+// --- BODY ---
+
 float sonicLegL(vec3 p) {
-    // Jambe gauche, plus longue, attachée bas du torse
-    return sdEllipsoid(p - (sonicPos + vec3(-0.07, -0.93, 0.07)), vec3(0.03, 0.36, 0.045));
+    return sdEllipsoid(p - (sonicPos + vec3(-0.05, -0.31, 0.08)), vec3(0.022, 0.10, 0.028));
 }
 float sonicLegR(vec3 p) {
-    return sdEllipsoid(p - (sonicPos + vec3(0.07, -0.93, 0.07)), vec3(0.03, 0.36, 0.045));
+    return sdEllipsoid(p - (sonicPos + vec3(0.05, -0.31, 0.08)), vec3(0.022, 0.10, 0.028));
 }
 
 
-// ===================
-// PIEDS/CHAUSSURES (grands, semelles épaisses, forme dynamique)
-// ===================
+
+
+
+
+// --- PIEDS (plus grands, ovales, plats) ---
 float sonicShoeL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.13, -1.23, 0.13);
-    float shoe = sdEllipsoid(p - base, vec3(0.15, 0.09, 0.14));
-    float sole = sdBox(p - (base + vec3(0.0, -0.035, 0.0)), vec3(0.16, 0.025, 0.17));
-    // Boucle blanche
-    float buckle = sdBox(p - (base + vec3(0.0, 0.015, 0.10)), vec3(0.05, 0.011, 0.03));
-    return min(min(shoe, sole), buckle);
+    vec3 base = sonicPos + vec3(-0.09, -0.49, 0.12);
+    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
+    return shoe;
 }
 float sonicShoeR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.13, -1.23, 0.13);
-    float shoe = sdEllipsoid(p - base, vec3(0.15, 0.09, 0.14));
-    float sole = sdBox(p - (base + vec3(0.0, -0.035, 0.0)), vec3(0.16, 0.025, 0.17));
-    float buckle = sdBox(p - (base + vec3(0.0, 0.015, 0.10)), vec3(0.05, 0.011, 0.03));
-    return min(min(shoe, sole), buckle);
+    vec3 base = sonicPos + vec3(0.09, -0.49, 0.12);
+    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
+    return shoe;
 }
 
-
-// ===================
-// COU (améliore la transition tête/tronc)
-// ===================
-float sonicNeck(vec3 p) {
-    // Un cylindre court, fin, reliant la tête au torse
-    vec3 base = sonicPos + vec3(0.0, -0.12, 0.10);
-    return sdEllipsoid(p - base, vec3(0.045, 0.035, 0.045));
-}
 
 
 // Pique principal du haut
@@ -251,12 +308,6 @@ float sonicSpikeSideR2(vec3 p) {
     return min(main, tip);
 }
 
-// Yeux fusionnés, très grands (style film)
-float sonicEyes(vec3 p) {
-    // Grands, fusionnés, avancés, abaissés
-    vec3 center = sonicPos + vec3(0.0, 0.06, 0.31);
-    return sdEllipsoid(p - center, vec3(0.13, 0.14, 0.035));
-}
 
 
 // Yeux séparés (pour reflets ou détails, optionnel)
@@ -293,57 +344,9 @@ float sonicEyeHighlightR(vec3 p) {
     return sdEllipsoid(p-(sonicPos+vec3(0.055,0.175,0.332)), vec3(0.012,0.012,0.006)); 
 }
 
-// Nez noir, sphérique
-float sonicNose(vec3 p) {
-    vec3 center = sonicPos + vec3(0.0, -0.02, 0.38); // plus avancé et plus bas
-    return sdEllipsoid(p - center, vec3(0.034, 0.040, 0.032)); // légèrement plus gros
-}
-//float sonicEarL(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(-0.15,0.21,0.07)),vec3(0.105,0.165,0.14)); }
-//float sonicEarR(vec3 p) { return sdEllipsoid(p-(sonicPos+vec3(0.15,0.21,0.07)),vec3(0.105,0.165,0.14)); }
 
-// Oreille gauche de Sonic (combinaison de formes convexes)
-/*
-float sonicEarL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.15, 0.21, 0.07);
 
-    // Pavillon extérieur (grand ellipsoïde)
-    float outer = sdEllipsoid(p - base, vec3(0.105, 0.165, 0.14));
-    // Pavillon intérieur (petit ellipsoïde "creusé" mais ici convexes, donc union à côté)
-    float inner = sdEllipsoid(p - (base + vec3(0.01, 0.02, 0.02)), vec3(0.065, 0.09, 0.07));
-    // Base de l'oreille (capsule courte)
-    float stem = sdCapsule(p, base + vec3(0.0, -0.06, 0.0), base, 0.032);
 
-    // Union convexe des éléments de l’oreille
-    return min(outer, min(inner, stem));
-}
-*/
-// Oreille droite de Sonic (symétrique)
-/*
-float sonicEarR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.15, 0.21, 0.07);
-
-    float outer = sdEllipsoid(p - base, vec3(0.105, 0.165, 0.14));
-    float inner = sdEllipsoid(p - (base + vec3(-0.01, 0.02, 0.02)), vec3(0.065, 0.09, 0.07));
-    float stem = sdCapsule(p, base + vec3(0.0, -0.06, 0.0), base, 0.032);
-
-    return min(outer, min(inner, stem));
-}
-*/
-// --- Oreilles ---
-float sonicEarL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.18, 0.25, 0.08);
-    float outer = sdEllipsoid(p - base, vec3(0.12, 0.18, 0.15));
-    float inner = sdEllipsoid(p - (base + vec3(0.012, 0.021, 0.023)), vec3(0.07, 0.1, 0.08));
-    float stem = sdCapsule(p, base + vec3(0.0, -0.08, 0.0), base, 0.032);
-    return min(outer, min(inner, stem));
-}
-float sonicEarR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.18, 0.25, 0.08);
-    float outer = sdEllipsoid(p - base, vec3(0.12, 0.18, 0.15));
-    float inner = sdEllipsoid(p - (base + vec3(-0.012, 0.021, 0.023)), vec3(0.07, 0.1, 0.08));
-    float stem = sdCapsule(p, base + vec3(0.0, -0.08, 0.0), base, 0.032);
-    return min(outer, min(inner, stem));
-}
 
 float sonicShoeBuckleL(vec3 p) { return sdBox(p-(sonicPos+vec3(-0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
 float sonicShoeBuckleR(vec3 p) { return sdBox(p-(sonicPos+vec3(0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
@@ -376,79 +379,13 @@ float sonicQuillBack(vec3 p) {
 
 float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.11,0.14,0.28),sonicPos+vec3(-0.16,0.12,0.27),0.006); }
 float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.11,0.14,0.28),sonicPos+vec3(0.16,0.12,0.27),0.006); }
-// Main gauche de Sonic (paume + doigts convexes)
-/*
-float sonicHandL(vec3 p) {
-    vec3 palmCenter = sonicPos + vec3(-0.20, -0.43, 0.07);
-    vec3 q = p - palmCenter;
-    q.yz = mat2(cos(-0.6), -sin(-0.6), sin(-0.6), cos(-0.6)) * q.yz;
-
-    // Paume
-    float palm = sdEllipsoid(q, vec3(0.08, 0.12, 0.09));
-
-    // Doigts plus écartés (X plus grands), moins longs (distance sur Y réduite)
-    float finger1 = sdCapsule(p, palmCenter + vec3(-0.03, -0.10, 0.03), palmCenter + vec3(-0.03, -0.15, 0.05), 0.022);
-    float finger2 = sdCapsule(p, palmCenter + vec3(0.03, -0.10, 0.01), palmCenter + vec3(0.03, -0.15, 0.03), 0.019);
-    float finger3 = sdCapsule(p, palmCenter + vec3(-0.07, -0.10, 0.01), palmCenter + vec3(-0.07, -0.15, 0.03), 0.019);
-    float thumb   = sdCapsule(p, palmCenter + vec3(-0.12, -0.03, 0.05), palmCenter + vec3(-0.16, -0.05, 0.09), 0.018);
-
-    float hand = min(palm, min(finger1, min(finger2, min(finger3, thumb))));
-    return hand;
-}
-*/
-// Main droite de Sonic (symétrique)
-/*
-float sonicHandR(vec3 p) {
-    vec3 palmCenter = sonicPos + vec3(0.20, -0.43, 0.07);
-    vec3 q = p - palmCenter;
-    q.yz = mat2(cos(0.6), -sin(0.6), sin(0.6), cos(0.6)) * q.yz;
-
-    float palm = sdEllipsoid(q, vec3(0.08, 0.12, 0.09));
-
-    float finger1 = sdCapsule(p, palmCenter + vec3(0.03, -0.10, 0.03), palmCenter + vec3(0.03, -0.15, 0.05), 0.022);
-    float finger2 = sdCapsule(p, palmCenter + vec3(-0.03, -0.10, 0.01), palmCenter + vec3(-0.03, -0.15, 0.03), 0.019);
-    float finger3 = sdCapsule(p, palmCenter + vec3(0.07, -0.10, 0.01), palmCenter + vec3(0.07, -0.15, 0.03), 0.019);
-    float thumb   = sdCapsule(p, palmCenter + vec3(0.12, -0.03, 0.05), palmCenter + vec3(0.16, -0.05, 0.09), 0.018);
-
-    float hand = min(palm, min(finger1, min(finger2, min(finger3, thumb))));
-    return hand;
-}
-*/
-// ===================
-// MAINS (gants volumineux, doigts visibles)
-// ===================
-float sonicHandL(vec3 p) {
-    // Gant volumineux, avec base pour le pouce
-    vec3 palmCenter = sonicPos + vec3(-0.23, -0.61, 0.09);
-    float palm = sdEllipsoid(p - palmCenter, vec3(0.08, 0.11, 0.08));
-    // Pouce (capsule)
-    float thumb = sdCapsule(p, palmCenter + vec3(-0.04, 0.03, 0.03), palmCenter + vec3(-0.10, 0.08, 0.07), 0.016);
-    return min(palm, thumb);
-}
-float sonicHandR(vec3 p) {
-    vec3 palmCenter = sonicPos + vec3(0.23, -0.61, 0.09);
-    float palm = sdEllipsoid(p - palmCenter, vec3(0.08, 0.11, 0.08));
-    float thumb = sdCapsule(p, palmCenter + vec3(0.04, 0.03, 0.03), palmCenter + vec3(0.10, 0.08, 0.07), 0.016);
-    return min(palm, thumb);
-}
 
 
-// Ceinture (plus basse, plus fine, centrée)
-float sonicBelt(vec3 p) {
-    vec3 beltCenter = sonicPos + vec3(0.0, -0.59, 0.02);
-    float beltBox = sdBox(p - beltCenter, vec3(0.12, 0.014, 0.09));
-    float beltBuckle = sdEllipsoid(p - (beltCenter + vec3(0.0, 0.0, 0.11)), vec3(0.031, 0.014, 0.013));
-    return min(beltBox, beltBuckle);
-}
+
 
 
 // Bouche de Sonic avec des formes convexes
 // Bouche (petite, ovale, avancée, légèrement à droite pour le sourire film)
-float sonicMouth(vec3 p) {
-    // Remonte la bouche, plus proche du nez
-    vec3 center = sonicPos + vec3(0.04, -0.06, 0.33);
-    return sdEllipsoid(p - center, vec3(0.03, 0.012, 0.012));
-}
 
 // Joue gauche
 float sonicCheekL(vec3 p) {
@@ -476,29 +413,17 @@ float sonicForehead(vec3 p) {
 }
 
 // Pectoraux (plus hauts, plus avancés, un peu plus petits)
+// --- PEC (plus petits, intégrés dans le torse) ---
 float sonicChestL(vec3 p) {
-    vec3 center = sonicPos + vec3(-0.045, -0.20, 0.17);
-    return sdEllipsoid(p - center, vec3(0.065, 0.052, 0.09));
+    vec3 center = sonicPos + vec3(-0.035, -0.04, 0.13);
+    return sdEllipsoid(p - center, vec3(0.035, 0.025, 0.04));
 }
 float sonicChestR(vec3 p) {
-    vec3 center = sonicPos + vec3(0.045, -0.20, 0.17);
-    return sdEllipsoid(p - center, vec3(0.065, 0.052, 0.09));
-}
-
-// Ventre (plus bas, plus avancé, plus petit)
-float sonicBelly(vec3 p) {
-    vec3 center = sonicPos + vec3(0.0, -0.34, 0.14);
-    return sdEllipsoid(p - center, vec3(0.085, 0.10, 0.06));
+    vec3 center = sonicPos + vec3(0.035, -0.04, 0.13);
+    return sdEllipsoid(p - center, vec3(0.035, 0.025, 0.04));
 }
 
 
-// Hanches principales (plus bas, plus petites)
-float sonicHips(vec3 p) {
-    vec3 hipsCenter = sonicPos + vec3(0.0, -0.62, 0.07);
-    float hipsMain = sdEllipsoid(p - hipsCenter, vec3(0.10, 0.045, 0.09));
-    float hipsBox = sdBox(p - (hipsCenter + vec3(0.0, -0.024, 0.0)), vec3(0.085, 0.016, 0.07));
-    return min(hipsMain, hipsBox);
-}
 // Hanche latérale gauche
 float sonicHipL(vec3 p) {
     vec3 center = sonicPos + vec3(-0.075, -0.47, 0.05);
@@ -616,8 +541,8 @@ float sSpikeSideR2 = sonicSpikeSideR2(p); if(sSpikeSideR2 < d) { d = sSpikeSideR
     float shandL = sonicHandL(p); if(shandL < d){ d = shandL; partId = 102; }
     float shandR = sonicHandR(p); if(shandR < d){ d = shandR; partId = 102; }
     float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 103; }
-    float chestL = sonicChestL(p); if(chestL < d) { d = chestL; partId = 103; }
-    float chestR = sonicChestR(p); if(chestR < d) { d = chestR; partId = 103; }
+    float chestL = sonicChestL(p); if(chestL < d) { d = chestL; partId = 31; }
+    float chestR = sonicChestR(p); if(chestR < d) { d = chestR; partId = 31; }
     float smouth = sonicMouth(p); if(smouth < d) { d = smouth; partId = 104; }
     float belly = sonicBelly(p); if(belly < d) { d = belly; partId = 104; }
     float ships = sonicHips(p); if(ships < d) { d = ships; partId = 105; }
@@ -676,7 +601,7 @@ void main(void) {
         col = mix(col, vec3(1.0,0.32,0.74), 0.85);
 
     // Camera setup
-    vec3 ro = vec3(0.0,0.0,2.86891);
+   vec3 ro = vec3(0.0,0.0,2.86891);
     float angle = sin(time*0.5)*0.12;
     float c = cos(angle), s = sin(angle);
     mat3 rotY = mat3(
