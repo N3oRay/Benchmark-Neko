@@ -591,8 +591,8 @@ float sSpikeSideR2 = sonicSpikeSideR2(p); if(sSpikeSideR2 < d) { d = sSpikeSideR
     float eR = sonicEarR(p); if(eR<d){d=eR;partId=26;}
 
     float eyes = sonicEyes(p); if(eyes<d){d=eyes;partId=26;}
-    float spL = sonicPupilL(p); if(spL<d){d=spL;partId=27;}
-    float spR = sonicPupilR(p); if(spR<d){d=spR;partId=27;}
+    float spL = sonicPupilL(p); if(spL<d){d=spL;partId=29;}
+    float spR = sonicPupilR(p); if(spR<d){d=spR;partId=29;}
     float sn = sonicNose(p); if(sn<d){d=sn;partId=29;}
     float searL = sonicEarL(p); if(searL<d){d=searL;partId=30;}
     float searR = sonicEarR(p); if(searR<d){d=searR;partId=30;}
