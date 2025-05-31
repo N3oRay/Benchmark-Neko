@@ -359,7 +359,12 @@ float sonicMouth(vec3 p) {
 
 // --- Floor SDF (water) ---
 float waterFloor(vec3 p) {
-    return p.y + 0.82 + 0.07*sin(8.0*p.x+time*1.2)*sin(8.0*p.z+time*1.4)*0.5;
+    return p.y + 0.9 + 0.07*sin(8.0*p.x+time*1.2)*sin(8.0*p.z+time*1.4)*0.5;
+}
+
+float waterSurface(vec3 p) {
+    // Plan horizontal pour l'eau
+    return p.y + 0.9;
 }
 
 // --- Scene SDF ---
@@ -443,6 +448,7 @@ float sSpikeSideR2 = sonicSpikeSideR2(p); if(sSpikeSideR2 < d) { d = sSpikeSideR
     float smouth = sonicMouth(p); if(smouth < d) { d = smouth; partId = 104; }
     float ships = sonicHips(p); if(ships < d) { d = ships; partId = 105; }
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
+    float swater = waterSurface(p); if(swater < d) { d = swater; partId = 200; }
     return d;
 }
 
@@ -470,7 +476,10 @@ float phongSpecular(vec3 n, vec3 v, vec3 ldir, float shininess) {
 // --- Main ---
 void main(void) {
     vec2 uv = (gl_FragCoord.xy - 0.5*resolution.xy) / resolution.y;
-    vec3 col = vec3(1.0);
+    float alpha = 1.0;
+    vec3 col = vec3(0.0);
+
+    
 
     // Sun in sky
     vec2 sunPos = vec2(0.65,0.52);
@@ -582,6 +591,15 @@ void main(void) {
         else if(partId==104) col = mix(vec3(0.25,0.13,0.07), vec3(0.38,0.23,0.15), yNorm)*li + 0.5*spec; // bouche de Sonic
         else if(partId==105) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li + 0.14*fres; // hanches de Sonic
 
+        else if(partId==200) {
+            // Couleur de l'eau : bleu clair, transparence
+            vec3 waterColor = vec3(0.2, 0.5, 0.9);
+            col = mix(col, waterColor, 1.0); // Mélange la couleur dessous et l'eau
+            alpha = 0.4; // Ajoute la transparence, suppose que tu as une variable alpha
+            // Pour un effet de réflexion, tu peux rajouter un peu de fresnel :
+            // col += 0.2 * fres * vec3(0.4, 0.6, 0.95);
+        }
+
 
         // Outline for all
         int dummy;
@@ -599,5 +617,5 @@ void main(void) {
         col *= mix(0.5, 1.0, sshadow);
     }
 
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(col, alpha);
 }
