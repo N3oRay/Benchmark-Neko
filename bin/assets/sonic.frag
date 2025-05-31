@@ -180,17 +180,7 @@ float sonicLegR(vec3 p) {
     return sdEllipsoid(p - (sonicPos + vec3(0.085, -0.35, 0.08)), vec3(0.022, 0.18, 0.03));
 }
 
-/**** PIEDS (plus grands, ovales, plats) OK ***/
-float sonicShoeL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.09, -0.49, 0.12);
-    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
-    return shoe;
-}
-float sonicShoeR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.09, -0.49, 0.12);
-    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
-    return shoe;
-}
+
 
 /**  Pique principal du haut OK  **/
 float sonicSpikeTop(vec3 p) {
@@ -266,7 +256,37 @@ float sonicSpikeSideR2(vec3 p) {
     return min(main, tip);
 }
 
+/*************** Chaussure et chaussette ***/
+/**** PIEDS (plus grands, ovales, plats) OK ***/
+float sonicShoeL(vec3 p) {
+    vec3 base = sonicPos + vec3(-0.09, -0.49, 0.12);
+    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
+    return shoe;
+}
+float sonicShoeR(vec3 p) {
+    vec3 base = sonicPos + vec3(0.09, -0.49, 0.12);
+    float shoe = sdEllipsoid(p - base, vec3(0.085, 0.045, 0.06));
+    return shoe;
+}
 
+float sonicSockL(vec3 p) {
+    vec3 base = sonicPos + vec3(-0.09, -0.44, 0.13);
+    return sdEllipsoid(p - base, vec3(0.047, 0.026, 0.038));
+}
+float sonicSockR(vec3 p) {
+    vec3 base = sonicPos + vec3(0.09, -0.44, 0.13);
+    return sdEllipsoid(p - base, vec3(0.047, 0.026, 0.038));
+}
+float sonicShoeStripeL(vec3 p) {
+    vec3 base = sonicPos + vec3(-0.09, -0.49, 0.17);
+    return sdEllipsoid(p - base, vec3(0.028, 0.020, 0.021));
+}
+float sonicShoeStripeR(vec3 p) {
+    vec3 base = sonicPos + vec3(0.09, -0.49, 0.17);
+    return sdEllipsoid(p - base, vec3(0.028, 0.020, 0.021));
+}
+
+/*****************************************************************/
 
 // Yeux séparés (pour reflets ou détails, optionnel) OK
 float sonicEyeL(vec3 p) { 
@@ -437,8 +457,8 @@ float map(vec3 p, out int partId) {
     float slR = sonicLegR(p); if(slR<d){d=slR;partId=24;}
     float slHL = sonicHipL(p); if(slR<d){d=slR;partId=24;}
     float slHR = sonicHipR(p); if(slR<d){d=slR;partId=24;}
-    float sshL = sonicShoeL(p); if(sshL<d){d=sshL;partId=25;}
-    float sshR = sonicShoeR(p); if(sshR<d){d=sshR;partId=25;}
+    //float sshL = sonicShoeL(p); if(sshL<d){d=sshL;partId=25;}
+    //float sshR = sonicShoeR(p); if(sshR<d){d=sshR;partId=25;}
 
     float sSpikeTop = sonicSpikeTop(p); if(sSpikeTop < d) { d = sSpikeTop; partId = 26; }
     float sSpikeL   = sonicSpikeL(p);   if(sSpikeL   < d) { d = sSpikeL;   partId = 26; }
@@ -478,6 +498,15 @@ float map(vec3 p, out int partId) {
     float squillB = sonicQuillBack(p); if(squillB<d){d=squillB;partId=36;}
     float selashL = sonicEyelashL(p); if(selashL<d){d=selashL;partId=37;}
     float selashR = sonicEyelashR(p); if(selashR<d){d=selashR;partId=37;}
+
+
+    float ssockL = sonicSockL(p); if(ssockL<d){d=ssockL;partId=39;}
+    float ssockR = sonicSockR(p); if(ssockR<d){d=ssockR;partId=39;}
+    float sshoeL = sonicShoeL(p); if(sshoeL<d){d=sshoeL;partId=40;}
+    float sshoeR = sonicShoeR(p); if(sshoeR<d){d=sshoeR;partId=40;}
+    float sstripeL = sonicShoeStripeL(p); if(sstripeL<d){d=sstripeL;partId=41;}
+    float sstripeR = sonicShoeStripeR(p); if(sstripeR<d){d=sstripeR;partId=41;}
+
     // Museau et joue
     float cheekL = sonicCheekL(p); if(cheekL < d) { d = cheekL; partId = 101; }
     float cheekR = sonicCheekR(p); if(cheekR < d) { d = cheekR; partId = 101; }
@@ -633,6 +662,10 @@ void main(void) {
         else if(partId==35) col = vec3(0.31,0.53,0.96)*li + 0.22*fres; // top quill
         else if(partId==36) col = vec3(0.23,0.30,0.84)*li + 0.17*fres; // back quill
         else if(partId==37) col = vec3(0.06,0.09,0.14)*li + 0.5*spec; // Sonic eyelashes
+
+        else if(partId == 39) { col = vec3(1.0,1.0,1.0); }     // Sonic Socks
+        else if(partId == 40) { col = vec3(0.83,0.07,0.12); }  // Sonic Shoes (rouge)
+        else if(partId == 41) { col = vec3(1.0,1.0,1.0); }     // Sonic Shoe Stripe
         // Sol
         else if(partId==99) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li + 0.5*spec; // SOL
         else if(partId==100) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li + 0.5*spec; // SOL
