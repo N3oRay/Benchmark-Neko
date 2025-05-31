@@ -64,35 +64,8 @@ float kittyEyelashL1(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.12,0.14,0.28),k
 float kittyEyelashL2(vec3 p){return sdCapsule(p,kittyPos+vec3(-0.09,0.16,0.28),kittyPos+vec3(-0.13,0.23,0.27),0.007);}
 float kittyEyelashR1(vec3 p){return sdCapsule(p,kittyPos+vec3(0.12,0.14,0.28),kittyPos+vec3(0.18,0.20,0.27),0.007);}
 float kittyEyelashR2(vec3 p){return sdCapsule(p,kittyPos+vec3(0.09,0.16,0.28),kittyPos+vec3(0.13,0.23,0.27),0.007);}
-float kittyMouth(vec3 p) {
-    vec3 q = p-(kittyPos+vec3(0.0,-0.04,0.30));
-    float r = 0.055;
-    float t = atan(q.y, q.x);
-    float arc = abs(length(q.xz)-r);
-    float yArc = abs(q.y-0.01*sin(2.5*t));
-    return max(arc-0.0012, yArc-0.01);
-}
-float kittyStripe1(vec3 p) {
-    vec3 base = kittyPos+vec3(0.0,0.219,0.24);
-    float d = length(p-base)-0.048;
-    float y = p.y-(kittyPos.y+0.21);
-    float mask = smoothstep(0.0017,0.012,abs(y));
-    return d-0.009*mask;
-}
-float kittyStripeL(vec3 p) {
-    vec3 base = kittyPos+vec3(-0.09,0.219,0.23);
-    float d = length(p-base)-0.027;
-    float y = p.y-(kittyPos.y+0.19);
-    float mask = smoothstep(0.0011,0.008,abs(y));
-    return d-0.005*mask;
-}
-float kittyStripeR(vec3 p) {
-    vec3 base = kittyPos+vec3(0.09,0.219,0.23);
-    float d = length(p-base)-0.027;
-    float y = p.y-(kittyPos.y+0.19);
-    float mask = smoothstep(0.0011,0.008,abs(y));
-    return d-0.005*mask;
-}
+
+
 
 // --- Sonic SDFs (at x=+0.4) ---
 vec3 sonicPos = vec3(0.4, 0.0, 0.0);
@@ -455,10 +428,7 @@ float map(vec3 p, out int partId) {
     float kel2 = kittyEyelashL2(p); if(kel2<d){d=kel2;partId=15;}
     float ker1 = kittyEyelashR1(p); if(ker1<d){d=ker1;partId=15;}
     float ker2 = kittyEyelashR2(p); if(ker2<d){d=ker2;partId=15;}
-    //float kMouth = kittyMouth(p); if(kMouth<d){d=kMouth;partId=16;}
-    //float kstripe1 = kittyStripe1(p); if(kstripe1<d){d=kstripe1;partId=17;}
-    //float kstripeL = kittyStripeL(p); if(kstripeL<d){d=kstripeL;partId=18;}
-    //float kstripeR = kittyStripeR(p); if(kstripeR<d){d=kstripeR;partId=19;}
+
     // --- Sonic SDFs (at x=+0.4) ---
     float sh = sonicHead(p); if(sh<d){d=sh;partId=20;}
     float sf = sonicFace(p); if(sf<d){d=sf;partId=21;}
@@ -470,9 +440,6 @@ float map(vec3 p, out int partId) {
     float slR = sonicLegR(p); if(slR<d){d=slR;partId=24;}
     float sshL = sonicShoeL(p); if(sshL<d){d=sshL;partId=25;}
     float sshR = sonicShoeR(p); if(sshR<d){d=sshR;partId=25;}
-    //float ssp1 = sonicSpike1(p); if(ssp1<d){d=ssp1;partId=26;}
-    //float ssp2 = sonicSpike2(p); if(ssp2<d){d=ssp2;partId=26;}
-    //float ssp3 = sonicSpike3(p); if(ssp3<d){d=ssp3;partId=26;}
 
     float sSpikeTop = sonicSpikeTop(p); if(sSpikeTop < d) { d = sSpikeTop; partId = 27; }
     float sSpikeL   = sonicSpikeL(p);   if(sSpikeL   < d) { d = sSpikeL;   partId = 27; }
@@ -662,9 +629,7 @@ void main(void) {
             float eyeReflection = pow(clamp(dot(reflect(-ldir, n), -rd), 0.0, 1.0), 28.0);
             col = mix(col, vec3(1.0, 1.0, 1.0), 0.28 * eyeReflection);
         }
-	//else if(partId==27) return mix(vec3(0.20,0.40,0.85), vec3(0.28,0.49,1.0), yNorm)*li; // Ears
-    //    else if(partId==28) return mix(vec3(0.99,0.99,0.98), vec3(0.93,0.95,0.99), yNorm)*li + 1.0*spec + 0.7*fres; // Eyes
-    
+
         else if(partId==28) col = mix(vec3(0.08,0.34,0.12), vec3(0.29,0.67,0.34), yNorm)*li + 0.8*spec + 0.6*fres;
         else if(partId==29) col = mix(vec3(0.1,0.1,0.1),vec3(0.23,0.23,0.25),yNorm)*li + 1.0*spec + 0.7*fres;
         else if(partId==30) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li;
