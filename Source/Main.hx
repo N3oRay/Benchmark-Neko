@@ -57,29 +57,29 @@ import lime.graphics.WebGLRenderContext;
 import lime.graphics.opengl.WebGLContext in WebGLRenderContext;
 #end
 
-	
+
 class Main extends Sprite
 {
 
     //private var glfwSwapInterval(0); // test unlimit GPU
 	private static var glFragmentShaders = [
 		#if mobile
-		"intro", "sonic", "knuckles", "kurby", "Hellokitty", "stars", "nuage", "vector", "cars", "cars2", "ring", "10.2", "10", "6286", "5733", "5", "50", "04", "36", "00", "18", "12293.0", "01", "02", "03", "1", "11", "12", "12288.0", "12290.0", "12294.0", "12297.0", 
-        "12326.0", "12366.0", "12441.0", "12469.1", "12470.1", "12471.0", "12473.0", "12476.2", "13", "14", "15", "16", "17", "19", "2", "20", "21", 
-		"22", "23", "24", "25", "26", "27", "28", "29", "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", 
-		"40", "41", "42", "4278.1", "43", "44", "09", "45", "46", "47", "48", "51", "5359.8", "5398.8", "5454.21", 
-		"5492", "5805.18", "5812", "5891.5", "5986.0", "6", "6022", "6043.1", "6049", "6138.4", "6147.1", "6162", 
+		"intro", "sonic", "knuckles", "kurby", "Hellokitty", "stars", "nuage", "vector", "cars", "cars2", "ring", "10.2", "10", "6286", "5733", "5", "50", "04", "36", "00", "18", "12293.0", "01", "02", "03", "1", "11", "12", "12288.0", "12290.0", "12294.0", "12297.0",
+        "12326.0", "12366.0", "12441.0", "12469.1", "12470.1", "12471.0", "12473.0", "12476.2", "13", "14", "15", "16", "17", "19", "2", "20", "21",
+		"22", "23", "24", "25", "26", "27", "28", "29", "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+		"40", "41", "42", "4278.1", "43", "44", "09", "45", "46", "47", "48", "51", "5359.8", "5398.8", "5454.21",
+		"5492", "5805.18", "5812", "5891.5", "5986.0", "6", "6022", "6043.1", "6049", "6138.4", "6147.1", "6162",
 		"6175", "6223.2", "6238", "6284.1", "6288.1", "7", "9", "49", "10.4", "10.3", "08", "10.1", "dragoon2", "n3oray", "snowman", "snowman2", "dragoon"
 		#else
-		"intro", "sonic", "knuckles", "kurby", "Hellokitty", "stars", "nuage", "vector", "cars", "cars2", "ring", "10.2", "10", "6286", "5733", "5", "50", "04", "36", "00", "18", "12293.0", "01", "02", "03", "1", "11", "12", "12288.0", "12290.0", "12294.0", "12297.0", 
-        "12326.0", "12366.0", "12441.0", "12469.1", "12470.1", "12471.0", "12473.0", "12476.2", "13", "14", "15", "16", "17", "19", "2", "20", "21", 
-		"22", "23", "24", "25", "26", "27", "28", "29", "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", 
-		"40", "41", "42", "4278.1", "43", "44", "09", "45", "46", "47", "48", "51", "5359.8", "5398.8", "5454.21", 
-		"5492", "5805.18", "5812", "5891.5", "5986.0", "6", "6022", "6043.1", "6049", "6138.4", "6147.1", "6162", 
+		"intro", "sonic", "knuckles", "kurby", "Hellokitty", "stars", "nuage", "vector", "cars", "cars2", "ring", "10.2", "10", "6286", "5733", "5", "50", "04", "36", "00", "18", "12293.0", "01", "02", "03", "1", "11", "12", "12288.0", "12290.0", "12294.0", "12297.0",
+        "12326.0", "12366.0", "12441.0", "12469.1", "12470.1", "12471.0", "12473.0", "12476.2", "13", "14", "15", "16", "17", "19", "2", "20", "21",
+		"22", "23", "24", "25", "26", "27", "28", "29", "3", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+		"40", "41", "42", "4278.1", "43", "44", "09", "45", "46", "47", "48", "51", "5359.8", "5398.8", "5454.21",
+		"5492", "5805.18", "5812", "5891.5", "5986.0", "6", "6022", "6043.1", "6049", "6138.4", "6147.1", "6162",
 		"6175", "6223.2", "6238", "6284.1", "6288.1", "7", "9", "49", "10.4", "10.3", "08", "10.1", "dragoon2", "n3oray", "snowman", "snowman2", "dragoon"
 		#end
 	];
-	private static var maxTime = 7000;
+	private static var maxTime = 8000;
 
 	private var currentIndex:Int;
 	private var glBackbufferUniform:GLUniformLocation;
@@ -102,10 +102,10 @@ class Main extends Sprite
 
 
         // Afficher Preload
-        var preload = new Preloader_FF(); 
-        Lib.current.stage.addChild(preload); 
+        var preload = new Preloader_FF();
+        Lib.current.stage.addChild(preload);
 
-      
+
         // Random fonction
 		//glFragmentShaders = randomizeArray(glFragmentShaders);
 
@@ -120,43 +120,43 @@ class Main extends Sprite
                                       Assets.getBitmapData("assets/preloader/logo.png"), //null or any BitmapData (suggested 50x50pixels)
                                       true,  // true if you want to see the APP information
                                       true); // true if you want to see the FPS Graph
-        Lib.current.stage.addChild(performance);  
+        Lib.current.stage.addChild(performance);
 
         // Score menu / GPSSPEC init
         var scorefps = new ScoreFPS(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
-        Lib.current.stage.addChild(scorefps);     
-        
-        
+        Lib.current.stage.addChild(scorefps);
+
+
 
         // Affichier Menu:
         /**
         var menu = new MenuContext([
-  
+
             { label: "Play", action: function() {
                 trace("Play BenchMark option selected!");
                 // Afficher POPup
-                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS."); 
-                Lib.current.stage.addChild(popup); 
+                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"BENCHMARK IN PROGRESS.");
+                Lib.current.stage.addChild(popup);
 
                 var score1fps = new ScoreFPS1(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
-                Lib.current.stage.addChild(score1fps); 
-            }}, 
+                Lib.current.stage.addChild(score1fps);
+            }},
             { label: "GPU Spec", action: function() {
                 trace("GPU Spec option selected!");
 
                 //var pGear = new Gear();
-                //Lib.current.stage.addChild(pGear); 
+                //Lib.current.stage.addChild(pGear);
                  // Afficher POPup
-                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"LOAD SYSTEMS."); 
-                Lib.current.stage.addChild(popup); 
+                var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"LOAD SYSTEMS.");
+                Lib.current.stage.addChild(popup);
 
                 var gpuspecs = new GPUSpecs(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
-                Lib.current.stage.addChild(gpuspecs); 
-            }}, 
+                Lib.current.stage.addChild(gpuspecs);
+            }},
             { label: "Exit", action: function() {
                 trace("Exit option selected!");
 
-                exit(); 
+                exit();
             }}
         ]);
         Lib.current.stage.addChild(menu);
@@ -320,8 +320,8 @@ class Main extends Sprite
 
 			glCompile(gl);
 		}
-           
-    
+
+
 	}
 
     function exit() {
@@ -329,7 +329,7 @@ class Main extends Sprite
             Sys.exit(0);
         #else
             openfl.system.System.exit(0);
-        #end                
+        #end
     }
 
 }

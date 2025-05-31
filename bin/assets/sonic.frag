@@ -567,7 +567,7 @@ void main(void) {
 
     // Camera setup
    vec3 ro = vec3(0.0,0.0,2.86891);
-    float angle = sin(time*0.5)*0.42;
+    float angle = sin(time*0.5)*0.5;
     float c = cos(angle), s = sin(angle);
     mat3 rotY = mat3(
         c, 0, s,
