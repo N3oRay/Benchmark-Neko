@@ -110,12 +110,12 @@ float sonicHead(vec3 p) {
 
 /*** PEAUPIERE (plus hautes, plus petites) OK ***/
 float sonicEarL(vec3 p) {
-    vec3 center = sonicPos + vec3(-0.06, 0.21, 0.10);
-    return sdEllipsoid(p - center, vec3(0.104, 0.125, 0.09));
+    vec3 center = sonicPos + vec3(-0.05, 0.21, 0.12);
+    return sdEllipsoid(p - center, vec3(0.13, 0.10, 0.08));
 }
 float sonicEarR(vec3 p) {
-    vec3 center = sonicPos + vec3(0.06, 0.21, 0.10);
-    return sdEllipsoid(p - center, vec3(0.104, 0.125, 0.09));
+    vec3 center = sonicPos + vec3(0.05, 0.21, 0.12);
+    return sdEllipsoid(p - center, vec3(0.13, 0.10, 0.08));
 }
 
 /*** COU ***/
@@ -298,10 +298,10 @@ float sonicShoeStripeR(vec3 p) {
 
 // Yeux separes (pour reflets ou details, optionnel) OK
 float sonicEyeL(vec3 p) {
-    return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.123,0.180)), vec3(0.07,0.12,0.04));
+    return sdEllipsoid(p-(sonicPos+vec3(-0.06,0.123,0.180)), vec3(0.08,0.15,0.04));
 }
 float sonicEyeR(vec3 p) {
-    return sdEllipsoid(p-(sonicPos+vec3(0.06,0.123,0.180)), vec3(0.07,0.12,0.04));
+    return sdEllipsoid(p-(sonicPos+vec3(0.06,0.123,0.180)), vec3(0.08,0.15,0.04));
 }
 
 /** Dessous des yeux  x,y,z   OK **/
