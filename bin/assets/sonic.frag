@@ -266,16 +266,25 @@ float sonicShoeR(vec3 p) {
     float shoe = sdEllipsoid(p - base, vec3(0.065, 0.045, 0.16));
     return shoe;
 }
-// Chaussette blanche
+// Chaussette blanche haut ****************************
 float sonicSockL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.09, -0.43, 0.10);
-    return sdEllipsoid(p - base, vec3(0.047, 0.028, 0.038));
+    vec3 base = sonicPos + vec3(-0.09, -0.40, 0.10);
+    return sdEllipsoid(p - base, vec3(0.047, 0.029, 0.038));
 }
 float sonicSockR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.09, -0.43, 0.10);
-    return sdEllipsoid(p - base, vec3(0.047, 0.028, 0.038));
+    vec3 base = sonicPos + vec3(0.09, -0.40, 0.10);
+    return sdEllipsoid(p - base, vec3(0.047, 0.029, 0.038));
 }
-// haut blanc
+// bas de la chaussette
+float sonicSockBL(vec3 p) {
+    vec3 base = sonicPos + vec3(-0.09, -0.43, 0.10);
+    return sdEllipsoid(p - base, vec3(0.047, 0.018, 0.038));
+}
+float sonicSockBR(vec3 p) {
+    vec3 base = sonicPos + vec3(0.09, -0.43, 0.10);
+    return sdEllipsoid(p - base, vec3(0.047, 0.018, 0.038));
+}
+// haut blanc **************************************
 float sonicShoeStripeL(vec3 p) {
     vec3 base = sonicPos + vec3(-0.09, -0.48, 0.20);
     return sdEllipsoid(p - base, vec3(0.065, 0.032, 0.021));
@@ -496,8 +505,10 @@ float map(vec3 p, out int partId) {
     float selashR = sonicEyelashR(p); if(selashR<d){d=selashR;partId=37;}
 
 
-    float ssockL = sonicSockL(p); if(ssockL<d){d=ssockL;partId=39;}
+    float ssockL = sonicSockL(p); if(ssockL<d){d=ssockL;partId=39;} // haute de la chaussette
     float ssockR = sonicSockR(p); if(ssockR<d){d=ssockR;partId=39;}
+    float ssockBL = sonicSockBL(p); if(ssockBL<d){d=ssockBL;partId=39;} // bas de la chaussette
+    float ssockBR = sonicSockBR(p); if(ssockBR<d){d=ssockBR;partId=39;}
     float sshoeL = sonicShoeL(p); if(sshoeL<d){d=sshoeL;partId=40;}
     float sshoeR = sonicShoeR(p); if(sshoeR<d){d=sshoeR;partId=40;}
     float sstripeL = sonicShoeStripeL(p); if(sstripeL<d){d=sstripeL;partId=41;}
