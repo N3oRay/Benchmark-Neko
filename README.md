@@ -29,6 +29,10 @@ A place to play with and experiment with GLSL shaders.
 
 ### Contenu en Francais
 
+<div style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0 0 2em 0;">
+  <img src="./n3oray.png" style="flex-grow: 1; flex-shrink: 1;" />
+</div>
+
 Pour les mises à jour et les discussions en Francais, suivez-moi sur Instagram
 [![Instagram Follow N3oray](https://raw.githubusercontent.com/N3oRay/inpaint-web/main/media/instagram-s.png)](https://www.instagram.com/n3oray/)
 
