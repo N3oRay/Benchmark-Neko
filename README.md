@@ -30,7 +30,9 @@ A place to play with and experiment with GLSL shaders.
 ### Contenu en Francais
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0 0 2em 0;">
+  <a href="https://www.instagram.com/n3oray/">
   <img src="./n3oray.png" style="flex-grow: 1; flex-shrink: 1;" />
+  </a>
 </div>
 
 Pour les mises à jour et les discussions en Francais, suivez-moi sur Instagram
