@@ -7,6 +7,16 @@ precision highp float;
 uniform float time;
 uniform vec2 resolution;
 
+
+/*** Define **/
+vec3 sunDir	= normalize(vec3(.5, .7, -.8));
+
+float hello;
+float owwww;
+float wave;
+float gtime;
+bool  blink = false;
+
 /*** Helpers ***/
 float sdSphere(vec3 p, float r) { return length(p)-r; }
 float sdEllipsoid(vec3 p, vec3 r) { return (length(p/r)-1.0)*min(min(r.x,r.y),r.z); }
@@ -30,7 +40,7 @@ float hash21(vec2 p) {
 }
 
 /*** Kitty SDFs (at x=-0.45) ***/
-vec3 kittyPos = vec3(-0.45,0.0,0.0);
+vec3 kittyPos = vec3(-0.45,0.0,-0.30);
 float kittyHead(vec3 p) { return sdEllipsoid(p-kittyPos, vec3(0.35,0.33,0.28)); }
 float kittyBody(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.0,-0.44,0.0)), vec3(0.20,0.23,0.17)); }
 float kittyEarL(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(-0.23,0.32,0.0)), vec3(0.09,0.16,0.07)); }
@@ -96,6 +106,8 @@ float sonicNose(vec3 p) {
     //vec3 center = sonicPos + vec3(0.0, 0.115, 0.25);
     return sdEllipsoid(p - (sonicPos + vec3(0.0, 0.115, 0.25)), vec3(0.03, 0.03, 0.035));
 }
+
+/** Bouche anime:**/
 
 /*** BOUCHE  OK ***/
 float sonicMouth(vec3 p) {
@@ -211,6 +223,34 @@ float sonicSpikeR(vec3 p) {
 }
 
 
+// Forme geometrique TORUS *********************************************************************************
+
+float sdTorus( vec3 p, vec2 t )
+{
+    return length( vec2(length(p.xz)-t.x,p.y) )-t.y;
+}
+
+float sdCappedTorus(in vec3 p, in vec2 sc, in float ra, in float rb)
+{
+    p.x = abs(p.x);
+    float k = (sc.y*p.x>sc.x*p.y) ? dot(p.xy,sc) : length(p.xy);
+    return sqrt( dot(p,p) + ra*ra - 2.0*ra*k ) - rb;
+}
+
+//    ********************************************************** SURCILLES ************************************
+float sonicPaupiereR(vec3 p){
+    return sdCappedTorus(p - (sonicPos + vec3(-0.070, 0.19, 0.18)), vec2(0.00,-0.25), 0.07, 0.02 );
+}
+
+float sonicPaupiereL(vec3 p){
+    return sdCappedTorus(p - (sonicPos + vec3(0.070, 0.19, 0.18)), vec2(0.00,-0.25), 0.07, 0.02 );
+}
+
+// ****************************************** ANNEAU ****************************
+float sonicAnneau(vec3 p){
+    return sdTorus(p - (sonicPos + vec3(0.085, -0.35, 0.08)), vec2(0.866025,-0.5));
+}
+
 // FRONT DE SONIC ------------------------Grand pique central OK
 float sonicSpikeC(vec3 p) {
     vec3 base = sonicPos + vec3(0.0, 0.016, -0.0124);
@@ -316,7 +356,7 @@ float sonicShoeStripeR(vec3 p) {
     return sdEllipsoid(p - base, vec3(0.065, 0.032, 0.021));
 }
 
-/*****************************************************************/
+/********************************* YEUX *************************************************************************/
 
 // YEUX BLANC separes (pour reflets ou details, optionnel) OK
 float sonicEyeL(vec3 p) {
@@ -326,7 +366,7 @@ float sonicEyeR(vec3 p) {
     return sdEllipsoid(p-(sonicPos+vec3(0.06,0.125,0.180)), vec3(0.08,0.14,0.05));
 }
 
-/** Dessous des yeux  x,y,z   OK **/
+/** Dessous des yeux  x,y,z   A REVOIR **/
 float sonicEyelashL(vec3 p) { return sdCapsule(p,sonicPos+vec3(-0.03,0.118,0.22),sonicPos+vec3(-0.12,0.1,0.22),0.010); }
 float sonicEyelashR(vec3 p) { return sdCapsule(p,sonicPos+vec3(0.03,0.118,0.22),sonicPos+vec3(0.12,0.1,0.22),0.010); }
 
@@ -552,11 +592,15 @@ float map(vec3 p, out int partId) {
     float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 106; }
     float chestL = sonicChestL(p); if(chestL < d) { d = chestL; partId = 31; }
     float chestR = sonicChestR(p); if(chestR < d) { d = chestR; partId = 31; }
-    float smouth = sonicMouth(p); if(smouth < d) { d = smouth; partId = 104; }
+    float smouth = sonicMouth(p); if(smouth < d) { d = smouth; partId = 104; } // Mouth...
+
     float belly = sonicBelly(p); if(belly < d) { d = belly; partId = 104; }
     float ships = sonicHips(p); if(ships < d) { d = ships; partId = 105; }
     float hipL = sonicHipL(p); if(hipL < d) { d = hipL; partId = 105; }
     float hipR = sonicHipR(p); if(hipR < d) { d = hipR; partId = 105; }
+
+    float pauR = sonicPaupiereR(p); if(pauR < d) { d = pauR; partId = 105; }
+    float pauL = sonicPaupiereL(p); if(pauL < d) { d = pauL; partId = 105; }
 
 
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
