@@ -143,27 +143,37 @@ float sonicArmL(vec3 p) {
     vec3 base = sonicPos + vec3(-0.14, 0.01, 0.09);
     vec3 q = p - base;
     q.yz = mat2(cos(-0.37), -sin(-0.37), sin(-0.37), cos(-0.37)) * q.yz;
-    return sdEllipsoid(q, vec3(0.018, 0.14, 0.022));
+    return sdEllipsoid(q, vec3(0.018, 0.16, 0.024));
 }
 float sonicArmR(vec3 p) {
     vec3 base = sonicPos + vec3(0.14, 0.01, 0.09);
     vec3 q = p - base;
-    q.yz = mat2(cos(0.37), -sin(0.37), sin(0.37), cos(0.37)) * q.yz;
-    return sdEllipsoid(q, vec3(0.018, 0.14, 0.022));
+    q.yz = mat2(cos(0.37), -sin(-0.37), sin(-0.37), cos(-0.37)) * q.yz;
+    return sdEllipsoid(q, vec3(0.018, 0.16, 0.024));
 }
 
-/*** MAINS (plus grandes) Ok ***/
+/*** MAINS (plus grandes) Ok *********************************************************/
 float sonicHandL(vec3 p) {
-    vec3 palmCenter = sonicPos + vec3(-0.14, -0.10, 0.13);
-    return sdEllipsoid(p - palmCenter, vec3(0.04, 0.055, 0.05));
+    vec3 palmCenter = sonicPos + vec3(-0.14, -0.14, 0.18);
+    return sdEllipsoid(p - palmCenter, vec3(0.04, 0.04, 0.07));
 }
 float sonicHandR(vec3 p) {
-    vec3 palmCenter = sonicPos + vec3(0.14, -0.10, 0.13);
-    return sdEllipsoid(p - palmCenter, vec3(0.04, 0.055, 0.05));
+    vec3 palmCenter = sonicPos + vec3(0.14, -0.14, 0.18);
+    return sdEllipsoid(p - palmCenter, vec3(0.04, 0.04, 0.07));
+}
+
+// DOIGTS
+float sonicHand2L(vec3 p) {
+    vec3 palmCenter = sonicPos + vec3(-0.14, -0.14, 0.22);
+    return sdEllipsoid(p - palmCenter, vec3(0.06, 0.06, 0.07));
+}
+float sonicHand2R(vec3 p) {
+    vec3 palmCenter = sonicPos + vec3(0.14, -0.14, 0.22);
+    return sdEllipsoid(p - palmCenter, vec3(0.06, 0.06, 0.07));
 }
 
 
-/** JAMBES OK ****/
+/** JAMBES OK ************************************************************************/
 
 float sonicLegL(vec3 p) {
     return sdEllipsoid(p - (sonicPos + vec3(-0.085, -0.35, 0.08)), vec3(0.022, 0.18, 0.03));
@@ -187,15 +197,7 @@ float sonicSpikeL(vec3 p) {
     vec3 base = sonicPos + vec3(-0.17, 0.08, -0.19);
     // Large base, pointe fine, un peu vers la gauche
     float main = sdEllipsoid(p - base, vec3(0.11, 0.16, 0.13));
-    float tip = sdCapsule(p, base + vec3(-0.03, 0.12, -0.04), base + vec3(-0.15, 0.28, -0.20), 0.045);
-    return min(main, tip);
-}
-
-// FRONT DE SONIC ------------------------Grand pique central OK
-float sonicSpikeC(vec3 p) {
-    vec3 base = sonicPos + vec3(0.0, 0.013, -0.0124);
-    float main = sdEllipsoid(p - base, vec3(0.11, 0.19, 0.16));
-    float tip = sdCapsule(p, base + vec3(0.0, 0.182, 0.11), base + vec3(0.0, 0.34, -0.030), 0.115);
+    float tip = sdCapsule(p, base + vec3(-0.00, 0.12, -0.04), base + vec3(-0.15, -0.12, -0.20), 0.080);
     return min(main, tip);
 }
 
@@ -203,9 +205,19 @@ float sonicSpikeC(vec3 p) {
 float sonicSpikeR(vec3 p) {
     vec3 base = sonicPos + vec3(0.17, 0.08, -0.19);
     float main = sdEllipsoid(p - base, vec3(0.11, 0.16, 0.13));
-    float tip = sdCapsule(p, base + vec3(0.03, 0.12, -0.04), base + vec3(0.15, 0.28, -0.20), 0.0645);
+    float tip = sdCapsule(p, base + vec3(0.00, 0.12, -0.04), base + vec3(0.15, -0.12, -0.20), 0.080);
     return min(main, tip);
 }
+
+
+// FRONT DE SONIC ------------------------Grand pique central OK
+float sonicSpikeC(vec3 p) {
+    vec3 base = sonicPos + vec3(0.0, 0.016, -0.0124);
+    float main = sdEllipsoid(p - base, vec3(0.11, 0.15, 0.16));
+    float tip = sdCapsule(p, base + vec3(0.0, 0.182, 0.11), base + vec3(0.0, 0.34, -0.030), 0.10);
+    return min(main, tip);
+}
+
 
 // Petit pique bas OK
 float sonicSpikeB(vec3 p) {
@@ -235,24 +247,22 @@ float sonicSpikeSideR1(vec3 p) {
 float sonicSpikeSideIL1(vec3 p) {
     vec3 base = sonicPos + vec3(-0.089, 0.17, 0.15);
     float main = sdEllipsoid(p - base, vec3(0.05, 0.18, 0.04));
-    float tip = sdCapsule(p, base + vec3(-0.04, 0.10, -0.03), base + vec3(-0.04, 0.10, -0.04), 0.01);
-    return min(main, tip);
+    return main;
 }
 
 // OREILLE Pique lateral droit haut OK ------------------------------ OREILLE INTERIEUR ***********************
 float sonicSpikeSideIR1(vec3 p) {
     vec3 base = sonicPos + vec3(0.089, 0.17, 0.15);
     float main = sdEllipsoid(p - base, vec3(0.05, 0.18, 0.04));
-    float tip = sdCapsule(p, base + vec3(0.04, 0.10, -0.03), base + vec3(0.04, 0.10, -0.04), 0.01);
-    return min(main, tip);
+    return main;
 }
 
 
-// Pique lateral gauche bas OK ----------
+// Pique lateral gauche bas OK ---------------------------------------------------------------------------------
 float sonicSpikeSideL2(vec3 p) {
     vec3 base = sonicPos + vec3(-0.15, 0.1, 0.01);
-    float main = sdEllipsoid(p - base, vec3(0.07, 0.27, 0.10));
-    float tip = sdCapsule(p, base + vec3(-0.02, 0.08, -0.01), base + vec3(-0.13, 0.13, -0.09), 0.05);
+    float main = sdEllipsoid(p - base, vec3(0.09, 0.20, 0.10));
+    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(-0.10, 0.10, -0.09), 0.06);
     return min(main, tip);
 }
 
@@ -260,12 +270,12 @@ float sonicSpikeSideL2(vec3 p) {
 // Pique lateral droit bas OK ----------
 float sonicSpikeSideR2(vec3 p) {
     vec3 base = sonicPos + vec3(0.15, 0.1, 0.01);
-    float main = sdEllipsoid(p - base, vec3(0.07, 0.27, 0.10));
-    float tip = sdCapsule(p, base + vec3(0.02, 0.08, -0.01), base + vec3(0.13, 0.13, -0.09), 0.05);
+    float main = sdEllipsoid(p - base, vec3(0.09, 0.20, 0.10));
+    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(0.10, 0.10, -0.09), 0.06);
     return min(main, tip);
 }
 
-/*************** Chaussure et chaussette ***/
+/*************** Chaussure et chaussette *************************************************************************/
 /**** PIEDS (plus grands, ovales, plats) OK  x,y,z ***/
 float sonicShoeL(vec3 p) {
     vec3 base = sonicPos + vec3(-0.09, -0.49, 0.12);
@@ -416,12 +426,12 @@ float sonicChestR(vec3 p) {
 
 // Hanche laterale gauche
 float sonicHipL(vec3 p) {
-    vec3 center = sonicPos + vec3(-0.075, -0.23, 0.05);
+    vec3 center = sonicPos + vec3(-0.075, -0.20, 0.05);
     return sdEllipsoid(p - center, vec3(0.045, 0.05, 0.07));
 }
 // Hanche laterale droite
 float sonicHipR(vec3 p) {
-    vec3 center = sonicPos + vec3(0.075, -0.23, 0.05);
+    vec3 center = sonicPos + vec3(0.075, -0.20, 0.05);
     return sdEllipsoid(p - center, vec3(0.045, 0.05, 0.07));
 }
 
@@ -535,6 +545,9 @@ float map(vec3 p, out int partId) {
 
     float shandL = sonicHandL(p); if(shandL < d){ d = shandL; partId = 102; }
     float shandR = sonicHandR(p); if(shandR < d){ d = shandR; partId = 102; }
+    float shand2L = sonicHand2L(p); if(shand2L < d){ d = shand2L; partId = 102; }
+    float shand2R = sonicHand2R(p); if(shand2R < d){ d = shand2R; partId = 102; }
+
     float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 103; }
     float chestL = sonicChestL(p); if(chestL < d) { d = chestL; partId = 31; }
     float chestR = sonicChestR(p); if(chestR < d) { d = chestR; partId = 31; }
