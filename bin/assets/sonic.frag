@@ -6,6 +6,7 @@ precision highp float;
 
 uniform float time;
 uniform vec2 resolution;
+uniform vec2 mouse;
 
 
 /*** Define **/
@@ -648,9 +649,16 @@ void main(void) {
     if(heart < 0.0)
         col = mix(col, vec3(1.0,0.32,0.74), 0.85);
 
-    // Camera setup
-   vec3 ro = vec3(0.0,0.0,2.86891);
-    float angle = sin(time*0.5)*0.8;
+
+	vec2 mo = mouse.xy/resolution.xy;
+	float time = 32.0 + time*1.5;
+
+    // camera
+    vec3 ta = vec3( 0.0, -0.75, 2.5);
+      // Camera setup
+   //vec3 ro = vec3(0.0,0.0,2.86891);
+   vec3 ro = ta + vec3( 0.5*cos(0.1*time + 1.0*mo.x), 0.5, 0.1*sin(0.3*time + 0.5*mo.x) );
+    float angle = sin(time*0.5)*0.5;
     float c = cos(angle), s = sin(angle);
     mat3 rotY = mat3(
         c, 0, s,
@@ -658,6 +666,8 @@ void main(void) {
        -s, 0, c
     );
     ro = rotY * ro;
+
+
     vec3 rd = rotY * normalize(vec3(uv, -1.4));
 
     // Raymarch
