@@ -159,6 +159,7 @@ float sonicHandL(vec3 p) {
 }
 float sonicHandR(vec3 p) {
     vec3 palmCenter = sonicPos + vec3(0.14, -0.14, 0.18);
+
     return sdEllipsoid(p - palmCenter, vec3(0.04, 0.04, 0.07));
 }
 
@@ -548,7 +549,7 @@ float map(vec3 p, out int partId) {
     float shand2L = sonicHand2L(p); if(shand2L < d){ d = shand2L; partId = 102; }
     float shand2R = sonicHand2R(p); if(shand2R < d){ d = shand2R; partId = 102; }
 
-    float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 103; }
+    float sbelt = sonicBelt(p); if(sbelt < d) { d = sbelt; partId = 106; }
     float chestL = sonicChestL(p); if(chestL < d) { d = chestL; partId = 31; }
     float chestR = sonicChestR(p); if(chestR < d) { d = chestR; partId = 31; }
     float smouth = sonicMouth(p); if(smouth < d) { d = smouth; partId = 104; }
@@ -705,7 +706,8 @@ void main(void) {
         // Sonic coloring (add more as needed)
         else if(partId==101) col = mix(vec3(1.0,0.87,0.58), vec3(1.0,0.96,0.88), yNorm)*li + 0.14*fres; // bas de la bouche
         else if(partId==102) col = mix(vec3(1.0), vec3(0.97,0.97,0.99), yNorm)*li + 0.6*spec; // Sonic's white hands
-        else if(partId==103) col = mix(vec3(0.13,0.13,0.13), vec3(0.23,0.24,0.26), yNorm)*li + 0.5*spec; // Ceinture foncee
+	else if(partId==103) col = mix(vec3(0.13,0.13,0.13), vec3(0.23,0.24,0.26), yNorm)*li + 0.5*spec; //
+        else if(partId==106) col = vec3(1.0,1.0,0.0)*li + 0.8*spec; // Ceinture foncee
         else if(partId==104) col = mix(vec3(0.25,0.13,0.07), vec3(0.38,0.23,0.15), yNorm)*li + 0.5*spec; // bouche de Sonic
         else if(partId==105) col = mix(vec3(0.13,0.29,0.80), vec3(0.18,0.41,0.97), yNorm)*li + 0.14*fres; // hanches de Sonic
 
