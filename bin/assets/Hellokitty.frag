@@ -6,6 +6,14 @@ uniform float time;
 uniform vec2 resolution;
 
 // SDF helpers
+float sdTorus( vec3 p, vec2 t)
+{
+     float k = length( vec2(length(p.xz)-t.x,p.y) )-t.y;
+	return k;
+}
+float sonicAnneau(vec3 p){
+    return sdTorus(p - (vec3(0.0, -0.0, 0.0)), vec2(0.2,0.015));
+}
 float sdSphere(vec3 p, float r) { return length(p)-r; }
 float sdEllipsoid(vec3 p, vec3 r) { return (length(p/r)-1.0)*min(min(r.x,r.y),r.z); }
 float sdBox(vec3 p, vec3 b) { vec3 q=abs(p)-b; return length(max(q,0.0))+min(max(q.x,max(q.y,q.z)),0.0); }
@@ -42,7 +50,7 @@ float kittyWhiskerL3(vec3 p){p-=vec3(-0.23,-0.10, 0.13);p.yz=mat2(cos(-0.37),-si
 float kittyWhiskerR1(vec3 p){p.x=-p.x;return kittyWhiskerL1(p);}
 float kittyWhiskerR2(vec3 p){p.x=-p.x;return kittyWhiskerL2(p);}
 float kittyWhiskerR3(vec3 p){p.x=-p.x;return kittyWhiskerL3(p);}
-float kittyDress(vec3 p){return sdBox(p-vec3(0.0,-0.52,0.0),vec3(0.21,0.12,0.13));}
+float kittyDress(vec3 p){return sonicAnneau(p-vec3(0.0,-0.52,0.0));}
 
 // Combine SDFs
 float map(vec3 p, out int partId) {

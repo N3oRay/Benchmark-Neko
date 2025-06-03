@@ -41,7 +41,7 @@ float hash21(vec2 p) {
 }
 
 /*** Kitty SDFs (at x=-0.45) ***/
-vec3 kittyPos = vec3(-0.45,0.0,-0.30);
+vec3 kittyPos = vec3(-0.50,-0.2,-0.30);
 float kittyHead(vec3 p) { return sdEllipsoid(p-kittyPos, vec3(0.35,0.33,0.28)); }
 float kittyBody(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(0.0,-0.44,0.0)), vec3(0.20,0.23,0.17)); }
 float kittyEarL(vec3 p) { return sdEllipsoid(p-(kittyPos+vec3(-0.23,0.32,0.0)), vec3(0.09,0.16,0.07)); }
@@ -76,7 +76,7 @@ float kittyEyelashR2(vec3 p){return sdCapsule(p,kittyPos+vec3(0.09,0.16,0.28),ki
 
 
 /*** Sonic SDFs (at x=+0.35) ***/
-vec3 sonicPos = vec3(0.3, -0.2, 0.0);
+vec3 sonicPos = vec3(0.3, -0.36, 0.0);
 
 /*** BASSIN (plus basses, plus larges, proche du debut des jambes) ***/
 float sonicHips(vec3 p) {
@@ -202,7 +202,7 @@ float sonicSpikeTop(vec3 p) {
     vec3 base = sonicPos + vec3(0.0, 0.219, -0.08);
     // Base large, pointe fine, forme incurvee
     float main = sdEllipsoid(p - base, vec3(0.13, 0.18, 0.11));
-    float tip = sdCapsule(p, base + vec3(0.0, 0.13, -0.05), base + vec3(0.0, 0.35, -0.22), 0.065);
+    float tip = sdCapsule(p, base + vec3(0.0, 0.13, -0.05), base + vec3(0.0, 0.22, -0.15), 0.060);
     return min(main, tip);
 }
 
@@ -211,7 +211,7 @@ float sonicSpikeL(vec3 p) {
     vec3 base = sonicPos + vec3(-0.17, 0.08, -0.19);
     // Large base, pointe fine, un peu vers la gauche
     float main = sdEllipsoid(p - base, vec3(0.11, 0.16, 0.13));
-    float tip = sdCapsule(p, base + vec3(-0.00, 0.12, -0.04), base + vec3(-0.15, -0.12, -0.20), 0.080);
+    float tip = sdCapsule(p, base + vec3(-0.00, 0.12, -0.04), base + vec3(-0.15, -0.12, -0.20), 0.070);
     return min(main, tip);
 }
 
@@ -219,16 +219,18 @@ float sonicSpikeL(vec3 p) {
 float sonicSpikeR(vec3 p) {
     vec3 base = sonicPos + vec3(0.17, 0.08, -0.19);
     float main = sdEllipsoid(p - base, vec3(0.11, 0.16, 0.13));
-    float tip = sdCapsule(p, base + vec3(0.00, 0.12, -0.04), base + vec3(0.15, -0.12, -0.20), 0.080);
+    float tip = sdCapsule(p, base + vec3(0.00, 0.12, -0.04), base + vec3(0.15, -0.12, -0.20), 0.070);
     return min(main, tip);
 }
 
 
 // Forme geometrique TORUS *********************************************************************************
 
-float sdTorus( vec3 p, vec2 t )
+float sdTorus( vec3 p, vec2 t)
 {
-    return length( vec2(length(p.xz)-t.x,p.y) )-t.y;
+
+     float k = length( vec2(length(p.xz)-t.x,p.y) )-t.y;
+	return k;
 }
 
 float sdCappedTorus(in vec3 p, in vec2 sc, in float ra, in float rb)
@@ -249,7 +251,7 @@ float sonicPaupiereL(vec3 p){
 
 // ****************************************** ANNEAU ****************************
 float sonicAnneau(vec3 p){
-    return sdTorus(p - (sonicPos + vec3(0.085, -0.35, 0.08)), vec2(0.866025,-0.5));
+    return sdTorus(p - (sonicPos + vec3(0.45, -0.45, 0.35)), vec2(0.2,0.015));
 }
 
 // FRONT DE SONIC ------------------------Grand pique central OK
@@ -273,7 +275,7 @@ float sonicSpikeB(vec3 p) {
 float sonicSpikeSideL1(vec3 p) {
     vec3 base = sonicPos + vec3(-0.09, 0.14, 0.14);
     float main = sdEllipsoid(p - base, vec3(0.08, 0.22, 0.04));
-    float tip = sdCapsule(p, base + vec3(-0.00, 0.23, -0.01), base + vec3(-0.02, 0.10, -0.07), 0.02);
+    float tip = sdCapsule(p, base + vec3(-0.00, 0.23, -0.01), base + vec3(-0.02, 0.10, -0.07), 0.01);
     return min(main, tip);
 }
 
@@ -281,7 +283,7 @@ float sonicSpikeSideL1(vec3 p) {
 float sonicSpikeSideR1(vec3 p) {
     vec3 base = sonicPos + vec3(0.09, 0.14, 0.14);
     float main = sdEllipsoid(p - base, vec3(0.08, 0.22, 0.04));
-    float tip = sdCapsule(p, base + vec3(0.00, 0.23, -0.01), base + vec3(0.02, 0.10, -0.07), 0.02);
+    float tip = sdCapsule(p, base + vec3(0.00, 0.23, -0.01), base + vec3(0.02, 0.10, -0.07), 0.01);
     return min(main, tip);
 }
 
@@ -304,7 +306,7 @@ float sonicSpikeSideIR1(vec3 p) {
 float sonicSpikeSideL2(vec3 p) {
     vec3 base = sonicPos + vec3(-0.15, 0.1, 0.01);
     float main = sdEllipsoid(p - base, vec3(0.09, 0.20, 0.10));
-    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(-0.10, 0.10, -0.09), 0.06);
+    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(-0.10, 0.18, -0.09), 0.05);
     return min(main, tip);
 }
 
@@ -313,7 +315,7 @@ float sonicSpikeSideL2(vec3 p) {
 float sonicSpikeSideR2(vec3 p) {
     vec3 base = sonicPos + vec3(0.15, 0.1, 0.01);
     float main = sdEllipsoid(p - base, vec3(0.09, 0.20, 0.10));
-    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(0.10, 0.10, -0.09), 0.06);
+    float tip = sdCapsule(p, base + vec3(0.0, 0.18, -0.01), base + vec3(0.10, 0.18, -0.09), 0.05);
     return min(main, tip);
 }
 
@@ -400,29 +402,31 @@ float sonicEyeHighlightR(vec3 p) {
 // Chaussures boucle
 float sonicShoeBuckleL(vec3 p) { return sdBox(p-(sonicPos+vec3(-0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
 float sonicShoeBuckleR(vec3 p) { return sdBox(p-(sonicPos+vec3(0.07,-0.88,0.13)),vec3(0.07,0.013,0.05)); }
-// Quill - Cheveux
+// Quill - Cheveux******************************************************************************************
 float sonicQuillTop(vec3 p) {
-    vec3 base = sonicPos + vec3(0.0, 0.27, -0.17);
+    vec3 base = sonicPos + vec3(0.0, 0.05, -0.17);
     float main = sdEllipsoid(p - base, vec3(0.14, 0.26, 0.13));
-    float tip = sdCapsule(p, base + vec3(0.0, 0.17, -0.08), base + vec3(0.0, 0.52, -0.41), 0.01);
+    float tip = sdCapsule(p, base + vec3(0.0, 0.17, -0.08), base + vec3(0.0, 0.02, -0.41), 0.05);
     return min(main, tip);
 }
 
 float sonicQuillL(vec3 p) {
-    vec3 base = sonicPos + vec3(-0.23, 0.14, -0.19);
-    float main = sdEllipsoid(p - base, vec3(0.13, 0.22, 0.13));
-    float tip = sdCapsule(p, base + vec3(-0.06, 0.18, -0.07), base + vec3(-0.22, 0.41, -0.28), 0.04);
+    vec3 base = sonicPos + vec3(-0.20, 0.10, -0.10);
+    float main = sdEllipsoid(p - base, vec3(0.10, 0.10, 0.13));
+    float tip = sdCapsule(p, base + vec3(-0.0, 0.05, -0.0), base + vec3(-0.15, -0.25, -0.15), 0.080);
     return min(main, tip);
 }
 float sonicQuillR(vec3 p) {
-    vec3 base = sonicPos + vec3(0.23, 0.14, -0.19);
-    float main = sdEllipsoid(p - base, vec3(0.13, 0.22, 0.13));
-    float tip = sdCapsule(p, base + vec3(0.06, 0.18, -0.07), base + vec3(0.22, 0.41, -0.28), 0.04);
+    vec3 base = sonicPos + vec3(0.20, 0.10, -0.10);
+    float main = sdEllipsoid(p - base, vec3(0.10, 0.10, 0.13));
+    float tip = sdCapsule(p, base + vec3(0.0, 0.05, -0.0), base + vec3(0.15, -0.25, -0.15), 0.060);
     return min(main, tip);
 }
+
+// QUEUE DE SONIC
 float sonicQuillBack(vec3 p) {
-    vec3 base = sonicPos + vec3(0.0, -0.01, -0.41);
-    return sdEllipsoid(p - base, vec3(0.16, 0.17, 0.18));
+    vec3 base = sonicPos + vec3(0.0, -0.24, -0.43);
+    return sdEllipsoid(p - base, vec3(0.16, 0.15, 0.18));
 }
 
 // Bouche de Sonic avec des formes convexes
@@ -463,7 +467,6 @@ float sonicChestR(vec3 p) {
     vec3 center = sonicPos + vec3(0.025, -0.084, 0.13);
     return sdEllipsoid(p - center, vec3(0.040, 0.036, 0.04));
 }
-
 
 
 // Hanche laterale gauche
@@ -531,14 +534,14 @@ float map(vec3 p, out int partId) {
     float sSpikeTop = sonicSpikeTop(p); if(sSpikeTop < d) { d = sSpikeTop; partId = 26; }
     float sSpikeL   = sonicSpikeL(p);   if(sSpikeL   < d) { d = sSpikeL;   partId = 26; }
     float sSpikeC   = sonicSpikeC(p);   if(sSpikeC   < d) { d = sSpikeC;   partId = 26; }
-    float sSpikeR   = sonicSpikeR(p);   if(sSpikeR   < d) { d = sSpikeR;   partId = 27; }
+    float sSpikeR   = sonicSpikeR(p);   if(sSpikeR   < d) { d = sSpikeR;   partId = 26; }
     float sSpikeB   = sonicSpikeB(p);   if(sSpikeB   < d) { d = sSpikeB;   partId = 26; }
     float sSpikeSideL1 = sonicSpikeSideL1(p); if(sSpikeSideL1 < d) { d = sSpikeSideL1; partId = 26; }
     float sSpikeSideL2 = sonicSpikeSideL2(p); if(sSpikeSideL2 < d) { d = sSpikeSideL2; partId = 26; }
     float sSpikeSideR1 = sonicSpikeSideR1(p); if(sSpikeSideR1 < d) { d = sSpikeSideR1; partId = 26; }
     float sSpikeSideR2 = sonicSpikeSideR2(p); if(sSpikeSideR2 < d) { d = sSpikeSideR2; partId = 26; }
-    float sSpikeSideIR1 = sonicSpikeSideIR1(p); if(sSpikeSideIR1 < d) { d = sSpikeSideIR1; partId = 21; }
-    float sSpikeSideIL1 = sonicSpikeSideIL1(p); if(sSpikeSideIL1 < d) { d = sSpikeSideIL1; partId = 21; }
+    float sSpikeSideIR1 = sonicSpikeSideIR1(p); if(sSpikeSideIR1 < d) { d = sSpikeSideIR1; partId = 21; } // interieur oreille
+    float sSpikeSideIL1 = sonicSpikeSideIL1(p); if(sSpikeSideIL1 < d) { d = sSpikeSideIL1; partId = 21; } // interieur oreille
 
 
     float qT = sonicQuillTop(p); if(qT<d){d=qT;partId=26;}
@@ -602,7 +605,7 @@ float map(vec3 p, out int partId) {
 
     float pauR = sonicPaupiereR(p); if(pauR < d) { d = pauR; partId = 105; }
     float pauL = sonicPaupiereL(p); if(pauL < d) { d = pauL; partId = 105; }
-
+    float anne = sonicAnneau(p); if(anne < d) { d = anne; partId = 106; }
 
     float floor = waterFloor(p); if(floor<d){d=floor;partId=99;}
     float swater = waterSurface(p); if(swater < d) { d = swater; partId = 200; }
