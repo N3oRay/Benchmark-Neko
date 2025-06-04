@@ -25,10 +25,15 @@ import openfl.display.Sprite;
 import openfl.display.Stage;
 import openfl.display.Tilemap;
 import openfl.display.Tileset;
+import openfl.display.SimpleButton;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.net.URLRequest;
 import openfl.display.Shape;
+import openfl.text.Font;
+import openfl.text.TextFormat;
+import openfl.filters.DropShadowFilter;
+import openfl.filters.GlowFilter;
 
 import Performance;
 import Preloader_FF;
@@ -94,39 +99,101 @@ class Main extends Sprite
 	private var initialized:Bool;
 	private var startTime:Int;
     private var perf:Performance;
+    // Menu principal
+    private var isVisible:Bool = true;
+    private var board:Sprite;
+    private var toggleButton0:SimpleButton;
 
+        private function toggleGraphic(e:MouseEvent):Void {
+            isVisible = !isVisible;
+            board.visible = isVisible;
+        }
 
+        private function disableGraphic(e:MouseEvent):Void {
+            isVisible = false;
+            board.visible = isVisible;
+        }
+        public function startRedux():Void {
+                //var popup = new Popup(Assets.getFont("assets/fonts/Platinum Sign.ttf"),"PLEASE FOLLOW ME ON INSTAGRAM N3ORAY");
+                //Lib.current.stage.addChild(popup);
+        }
+
+        private function makeButton(label:String, font:Font, x:Float, y:Float, onClick:Void->Void):SimpleButton {
+            var upState = drawButtonSmall(label, font, x, y, 0xCCCCCC);
+            var overState = drawButtonSmall(label, font, x, y, 0xAAAAAA);
+            var downState = drawButtonSmall(label, font, x, y, 0x888888);
+            var hitTestState = drawButtonSmall(label, font, x, y, 0xCCCCCC);
+
+            var btn = new SimpleButton(upState, overState, downState, hitTestState);
+            btn.x = x;
+            btn.y = y;
+            btn.addEventListener(MouseEvent.MOUSE_DOWN, function(_) onClick());
+
+            return btn;
+        }
+
+    function drawButtonSmall(label:String, font:Font, x:Float, y:Float, color:Int):Sprite {
+
+        var state = new Sprite();
+        // Draw small button background :
+        var upState = new Shape();
+        upState.graphics.beginFill(color); // color
+        upState.graphics.drawRoundRect(x, y, 20, 20, 10, 10); // x, y, width, height, ellipseWidth, ellipseHeight
+        upState.graphics.endFill();
+        state.addChild(upState); // This works because state is a Sprite
+        // Add effects: shadow and glow
+        this.filters = [
+            new DropShadowFilter(4, 45, 0x000000, 0.6, 8, 8, 1, 1),
+            new GlowFilter(0xffffff, 0.7, 10, 10, 2, 1)
+        ];
+        // Text du bouton :
+        var txt:TextField = new TextField();
+        //txt.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF, true);
+        txt.defaultTextFormat = new TextFormat(font.fontName, 12, 0x444444);
+        txt.text = label;
+        txt.width = 20;
+        txt.height = 20;
+        txt.x = x;
+        txt.y = y + 1;
+        txt.selectable = false;
+        state.addChild(txt);
+
+        return state;
+    }
+
+/********************************************************  FONCTION PRINCIPAL ***************************/
 	public function new()
 	{
 		super();
 
-
         // Afficher Preload
         var preload = new Preloader_FF();
         Lib.current.stage.addChild(preload);
-
-
         // Random fonction
 		//glFragmentShaders = randomizeArray(glFragmentShaders);
-
 		currentIndex = 0;
-
 		addEventListener(RenderEvent.RENDER_OPENGL, render);
 		addEventListener(Event.ENTER_FRAME, enterFrame);
 
+        // Init menu principal
+        board = new Sprite();
+        //board.x = 10; // decalage vers la droite
+        board.visible = isVisible;
 
         // Affichier Performance:
         var performance = new Performance(Assets.getFont("assets/fonts/Platinum Sign.ttf"),        //any font you want
                                       Assets.getBitmapData("assets/preloader/logo.png"), //null or any BitmapData (suggested 50x50pixels)
                                       true,  // true if you want to see the APP information
                                       true); // true if you want to see the FPS Graph
-        Lib.current.stage.addChild(performance);
+
+        board.addChild(performance);
+        //Lib.current.stage.addChild(performance);
 
         // Score menu / GPSSPEC init
         var scorefps = new ScoreFPS(Assets.getFont("assets/fonts/Platinum Sign.ttf"));
-        Lib.current.stage.addChild(scorefps);
-
-
+        board.addChild(scorefps);
+        //Lib.current.stage.addChild(scorefps);
+        Lib.current.stage.addChild(board);
 
         // Affichier Menu:
         /**
@@ -162,6 +229,12 @@ class Main extends Sprite
         Lib.current.stage.addChild(menu);
 
         **/
+
+        // creaction du bouton afficher / reduire
+        toggleButton0 = makeButton("-", Assets.getFont("assets/fonts/Platinum Sign.ttf"), 1, 1, startRedux);
+        // Add click listener
+        toggleButton0.addEventListener(MouseEvent.CLICK, toggleGraphic);
+        Lib.current.stage.addChild(toggleButton0);
 
 
 	}

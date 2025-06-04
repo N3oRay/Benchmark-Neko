@@ -61,7 +61,7 @@ class Performance extends Sprite
 	public function new(font:Font,
 						logoData:BitmapData=null,
 						showAppText:Bool=false,
-						showGraph:Bool=false) 
+						showGraph:Bool=false)
 	{
 		super();
 
@@ -94,11 +94,11 @@ class Performance extends Sprite
 		var nextX:Float = padding;
 
 		/// ### LOGO
-		var logoSize = 65; //50
+		var logoSize = 65; //50 or 65 max
 		if (logoData!=null) {
 			logo = new Bitmap(logoData);
 			logo.smoothing = true;
-			logo.x = nextX;
+			logo.x = nextX + 15;
 			logo.y = (fullHeight-logoSize)/2;
 			nextX = logo.x + logoSize + padding;
 		}
@@ -140,7 +140,7 @@ class Performance extends Sprite
 		#end #end #end
 		if (showGraph) addChild(graph);
 		addChild(performanceText);
-		
+
 		/// ###################################
 
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnter);
@@ -148,10 +148,10 @@ class Performance extends Sprite
 	}
 
 	private function onEnter(_):Void
-	{	
+	{
 		var now = Timer.stamp();
 		times.push(now);
-		
+
 		while (times[0] < now - 1)
 			times.shift();
 
@@ -159,18 +159,18 @@ class Performance extends Sprite
             skipped = 0;
             var mem:Float = Math.round(System.totalMemory / 1024 / 1024 * 100)/100;
             if (mem > memPeak) memPeak = mem;
-            
+
             if (visible)
-            {	
+            {
             	var fps:Int = times.length;
             	if (showGraph) drawGraph(fps);
-                performanceText.text = "FPS: " + fps + "\nMEM: " + mem + " MB\nMPK: " + memPeak + " MB";	
+                performanceText.text = "FPS: " + fps + "\nMEM: " + mem + " MB\nMPK: " + memPeak + " MB";
             }
         }
         skipped++;
 	}
 
-	private function drawGraph(fps:Int):Void 
+	private function drawGraph(fps:Int):Void
 	{
 		var color:Int;
 		fpsHistory.push(fps);
@@ -178,7 +178,7 @@ class Performance extends Sprite
         graph.graphics.clear();
         for (i in 0...fpsHistoryLen){
         	graph.graphics.moveTo(graphBarTickness*i+i*graphBarPadding,barHeight);
-        	if (fpsHistory[i] > 150) color = 0xdcffd8; 
+        	if (fpsHistory[i] > 150) color = 0xdcffd8;
             else if (fpsHistory[i] > 100) color = 0xc3ffbc;
             else if (fpsHistory[i] > 70) color = 0x9fe198;
         	else if (fpsHistory[i] > 50) color = 0xefdea2;
@@ -196,5 +196,5 @@ class Performance extends Sprite
 		boundData.fillRect(new Rectangle(0,0,Lib.current.stage.stageWidth,fullHeight),0x88000000);
 		bound.bitmapData = boundData;
 	}
-	
+
 }
