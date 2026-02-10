@@ -44,10 +44,15 @@ Pour les mises à jour et les discussions en Francais, suivez-moi sur Instagram
 
 ## Install Haxe
 
-sudo apt install haxe
-<div style="display: flex; justify-content: center; align-items: center; gap: 1em; margin: 0 0 2em 0;">
-or
-</div>
+    sudo apt install haxe
+
+  or
+
+    $sudo pacman -S haxe
+    
+  or
+
+
 
 https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
@@ -55,9 +60,7 @@ https://haxe.org/download/file/4.3.7/haxe-4.3.7-linux64.tar.gz/
 
     $sudo haxelib setup
 
-  or
 
-    $sudo pacman -S haxe
 
 
 ## Install OpenFL
